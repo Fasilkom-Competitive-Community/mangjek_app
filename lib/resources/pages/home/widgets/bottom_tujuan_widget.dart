@@ -8,14 +8,14 @@ import 'package:mangjek_app/resources/pages/home/widgets/bottom_pesan_widget.dar
 import 'package:mangjek_app/resources/widgets/tab_navigation_widget.dart';
 import 'package:nylo_framework/nylo_framework.dart';
 
-class BottomHome extends StatefulWidget {
-  BottomHome({super.key});
+class BottomTujuan extends StatefulWidget {
+  BottomTujuan({super.key});
 
   @override
-  State<BottomHome> createState() => _BottomHomeState();
+  State<BottomTujuan> createState() => _BottomTujuanState();
 }
 
-class _BottomHomeState extends NyState<BottomHome> {
+class _BottomTujuanState extends NyState<BottomTujuan> {
   late MapCubit _mapCubit;
   late SelectLocationCubit _selectLocationCubit;
 
@@ -49,7 +49,7 @@ class _BottomHomeState extends NyState<BottomHome> {
   }
 
   String getNamedSelectedLocation() {
-    return "Fasilkom, Indralaya";
+    return "Gang Buntu";
   }
 
   Widget showChooseLocationBottomWidget(SelectLocationFocused state) {
@@ -119,7 +119,7 @@ class _BottomHomeState extends NyState<BottomHome> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              Image.asset(getImageAsset("titikJemput.png"), scale: 3.0,),
+                              Image.asset(getImageAsset("tujuan.png"), scale: 3.0,),
                               SizedBox(
                                 width: 10,
                               ),
