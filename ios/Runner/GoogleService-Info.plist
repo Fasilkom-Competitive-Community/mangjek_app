@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>1070196618346-v2auip0h1tbmi1er3smdcm1dmc8t2oco.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.1070196618346-v2auip0h1tbmi1er3smdcm1dmc8t2oco</string>
+	<key>API_KEY</key>
+	<string>AIzaSyCdoiHy1kl6Qo2GcUmLh2rjVQXFXglRRyg</string>
+	<key>GCM_SENDER_ID</key>
+	<string>1070196618346</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.nylo.dev</string>
+	<key>PROJECT_ID</key>
+	<string>mangjek-test-3541d</string>
+	<key>STORAGE_BUCKET</key>
+	<string>mangjek-test-3541d.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:1070196618346:ios:5f19c2aa81ecaf58c8c613</string>
+</dict>
+</plist>

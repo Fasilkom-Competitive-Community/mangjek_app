@@ -1,0 +1,118 @@
+{
+  "project_info": {
+    "project_number": "1070196618346",
+    "project_id": "mangjek-test-3541d",
+    "storage_bucket": "mangjek-test-3541d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1070196618346:android:56a82caaeef713d1c8c613",
+        "android_client_info": {
+          "package_name": "com.example.mangjek"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1070196618346-1tkmhc454pvgg05higsh85o8vc9rep5j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCvdFU19OPKiGIVNjtE1fjFsaDJLlsls-w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1070196618346-1tkmhc454pvgg05higsh85o8vc9rep5j.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1070196618346-j5loiobgpokan258vciutqo87p0ib49o.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.mangjekDriver"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1070196618346:android:8e8ee54644271c0cc8c613",
+        "android_client_info": {
+          "package_name": "com.example.mangjek_driver"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1070196618346-1tkmhc454pvgg05higsh85o8vc9rep5j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCvdFU19OPKiGIVNjtE1fjFsaDJLlsls-w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1070196618346-1tkmhc454pvgg05higsh85o8vc9rep5j.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1070196618346-j5loiobgpokan258vciutqo87p0ib49o.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.mangjekDriver"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1070196618346:android:ae3f2d2833c510ecc8c613",
+        "android_client_info": {
+          "package_name": "com.nylo.dev"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1070196618346-1tkmhc454pvgg05higsh85o8vc9rep5j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCvdFU19OPKiGIVNjtE1fjFsaDJLlsls-w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1070196618346-1tkmhc454pvgg05higsh85o8vc9rep5j.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1070196618346-j5loiobgpokan258vciutqo87p0ib49o.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.mangjekDriver"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -39,6 +39,10 @@ dependencies:
   geocoding: ^2.0.5
   flutter_bloc: ^8.0.0
   equatable: ^2.0.5
+  hexcolor: ^3.0.1
+  firebase_core: ^2.4.1
+  firebase_auth: ^4.2.5
+  provider: ^6.0.5
 
 
 dev_dependencies:

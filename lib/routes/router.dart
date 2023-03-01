@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:mangjek_app/app/singleton/media_query.dart';
 import 'package:nylo_framework/nylo_framework.dart';
 
-import '../resources/pages/home/home_page.dart';
+import '../resources/pages/auth/onboarding/first_onboarding_widget.dart'
+    as first_onboarding_widget;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,6 +19,6 @@ import '../resources/pages/home/home_page.dart';
 appRouter() => nyRoutes((router) {
       router.route("/", (context) {
         MediaQuerySingleton.init(MediaQuery.of(context).size);
-        return HomePage();
+        return first_onboarding_widget.OnBoarding();
       });
     });
