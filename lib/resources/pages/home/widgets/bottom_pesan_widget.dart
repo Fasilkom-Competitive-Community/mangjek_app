@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hexcolor/hexcolor.dart';
 import 'package:mangjek_app/app/extensions/string.dart';
 import 'package:nylo_framework/nylo_framework.dart';
 
@@ -85,8 +86,6 @@ class _BottomPesanState extends NyState<BottomPesan> {
                         vertical: 5,
                       ),
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Row(
                             children: [
@@ -99,73 +98,43 @@ class _BottomPesanState extends NyState<BottomPesan> {
                                   ),
                                 ],
                               ),
-                              Column(
-                                // mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    children: [
-                                      Padding(
-                                        padding: EdgeInsets.symmetric(
-                                          horizontal: 5,
-                                        ),
+                              Expanded(
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      padding:
+                                          const EdgeInsets.only(left: 15.0),
+                                      width: double.infinity,
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Text(
+                                            "Ojeknya Sikuning",
+                                            style: TextStyle(
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.w600),
+                                          ),
+                                          const SizedBox(height: 8),
+                                          Text(
+                                            "Akan membantu kamu untuk mengantar pergi & pulang ngampus",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w400,
+                                                fontSize: 12),
+                                          ),
+                                          const SizedBox(height: 8),
+                                          Text(
+                                            "Nantikan fitur terbaru mangjek ya",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w400,
+                                                fontSize: 10,
+                                                color: HexColor('#8C8C8C')),
+                                          ),
+                                        ],
                                       ),
-                                      Text(
-                                        "Ojeknya Mangjek",
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 20,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  Row(
-                                    children: [
-                                      Padding(
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: 5)),
-                                      Text(
-                                        "Akan membantu kamu untuk",
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w400,
-                                            fontSize: 12),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    children: [
-                                      Padding(
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: 5)),
-                                      Text(
-                                        "mengantar pergi & pulang ngampus",
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w400,
-                                            fontSize: 12),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  Row(
-                                    children: [
-                                      Padding(
-                                          padding: EdgeInsets.symmetric(
-                                        horizontal: 5,
-                                      )),
-                                      Text(
-                                        "Nantikan fitur terbaru mangjek ya",
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w400,
-                                            fontSize: 10),
-                                      ),
-                                    ],
-                                  )
-                                ],
+                                    )
+                                  ],
+                                ),
                               ),
                             ],
                           ),

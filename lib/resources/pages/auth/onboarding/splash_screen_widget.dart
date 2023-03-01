@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../../app/extensions/constructor.dart' as cons;
 import '../../home/home_page.dart' as home_page;

@@ -52,8 +52,8 @@ class _OnBoardingState extends State<OnBoarding> {
               }
             },
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
+                SizedBox(height: 50),
                 SvgPicture.asset(
                   cons.assetsImgFirstSplashScreen,
                   width: cons.lebarGambarSplash,
@@ -76,10 +76,11 @@ class _OnBoardingState extends State<OnBoarding> {
                       fontWeight: FontWeight.w500),
                   textAlign: TextAlign.center,
                 ),
-                Container(
-                  decoration: const BoxDecoration(),
-                  height: 130.0,
-                  width: double.infinity,
+                Expanded(
+                  child: Container(
+                    decoration: const BoxDecoration(),
+                    width: double.infinity,
+                  ),
                 ),
                 SizedBox(
                   child: Row(
@@ -137,6 +138,9 @@ class _OnBoardingState extends State<OnBoarding> {
                     ),
                   ),
                 ),
+                SizedBox(
+                  height: 50.0,
+                )
               ],
             ),
           ),

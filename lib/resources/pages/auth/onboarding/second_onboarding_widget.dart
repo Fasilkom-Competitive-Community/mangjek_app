@@ -74,8 +74,8 @@ class _SecondOnboardingState extends State<SecondOnboarding> {
               }
             },
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
+                SizedBox(height: 50),
                 SvgPicture.asset(
                   cons.assetsImgSecondSplashScreen,
                   width: cons.lebarGambarSplash,
@@ -98,10 +98,11 @@ class _SecondOnboardingState extends State<SecondOnboarding> {
                       fontWeight: FontWeight.w500),
                   textAlign: TextAlign.center,
                 ),
-                Container(
-                  decoration: const BoxDecoration(),
-                  height: 130.0,
-                  width: double.infinity,
+                Expanded(
+                  child: Container(
+                    decoration: const BoxDecoration(),
+                    width: double.infinity,
+                  ),
                 ),
                 SizedBox(
                   child: Row(
@@ -138,11 +139,11 @@ class _SecondOnboardingState extends State<SecondOnboarding> {
                       ),
                     ),
                     onPressed: () {
-                      // Navigator.push(
-                      //   context,
-                      //   cons.GeserKiri(
-                      //       tujuan: const third_splash_screen.SplashScreen()),
-                      // );
+                      Navigator.push(
+                        context,
+                        cons.GeserKiri(
+                            tujuan: const third_onboarding.ThirdOnboarding()),
+                      );
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -159,6 +160,7 @@ class _SecondOnboardingState extends State<SecondOnboarding> {
                     ),
                   ),
                 ),
+                SizedBox(height: 50.0),
               ],
             ),
           ),
