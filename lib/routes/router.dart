@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mangjek_app/app/singleton/media_query.dart';
+import 'package:mangjek_app/resources/pages/profile/profile_page.dart';
+import 'package:mangjek_app/routes/constant.dart';
 import 'package:nylo_framework/nylo_framework.dart';
 
 import '../resources/pages/home/home_page.dart';
@@ -16,8 +18,9 @@ import '../resources/pages/home/home_page.dart';
 */
 
 appRouter() => nyRoutes((router) {
-      router.route("/", (context) {
+      router.route(ROUTE_INITIAL_PAGE, (context) {
         MediaQuerySingleton.init(MediaQuery.of(context).size);
         return HomePage();
       });
+      router.route(ROUTE_PROFILE_PAGE, (context) => ProfileUserPage());
     });

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nylo_framework/nylo_framework.dart';
+import 'package:sizer/sizer.dart';
 
 // ignore: must_be_immutable
 class AppBuild extends StatelessWidget {
@@ -59,7 +60,8 @@ class AppBuild extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Nylo nylo = Backpack.instance.read('nylo');
-    List<AppTheme> appThemes = nylo.appThemes.map((appTheme) => appTheme.toAppTheme()).toList();
+    List<AppTheme> appThemes =
+        nylo.appThemes.map((appTheme) => appTheme.toAppTheme()).toList();
     return LocalizedApp(
       child: ThemeProvider(
         themes: appThemes,
@@ -67,37 +69,45 @@ class AppBuild extends StatelessWidget {
           child: ValueListenableBuilder(
             valueListenable:
                 ValueNotifier(locale ?? NyLocalization.instance.locale),
-            builder: (context, Locale locale, _) => MaterialApp(
-              navigatorKey: navigatorKey,
-              themeMode: themeMode,
-              onGenerateTitle: onGenerateTitle,
-              onGenerateInitialRoutes: onGenerateInitialRoutes,
-              onUnknownRoute: onUnknownRoute,
-              builder: builder,
-              navigatorObservers: navigatorObservers,
-              color: color,
-              debugShowMaterialGrid: debugShowMaterialGrid,
-              showPerformanceOverlay: showPerformanceOverlay,
-              checkerboardRasterCacheImages: checkerboardRasterCacheImages,
-              checkerboardOffscreenLayers: checkerboardOffscreenLayers,
-              showSemanticsDebugger: showSemanticsDebugger,
-              debugShowCheckedModeBanner: debugShowCheckedModeBanner,
-              shortcuts: shortcuts,
-              actions: actions,
-              title: title ?? "",
-              darkTheme: darkTheme ?? appThemes.firstWhere((theme) => theme.id == getEnv('DARK_THEME_ID'), orElse: () => appThemes.first).data,
-              initialRoute: initialRoute,
-              onGenerateRoute: onGenerateRoute,
-              theme: themeData ?? ThemeProvider.themeOf(context).data,
-              localeResolutionCallback:
-                  (Locale? locale, Iterable<Locale> supportedLocales) {
-                return locale;
-              },
-              localizationsDelegates: NyLocalization.instance.delegates,
-              locale: locale,
-              supportedLocales:
-                  supportedLocales ?? NyLocalization.instance.locals(),
-            ),
+            builder: (context, Locale locale, _) =>
+                Sizer(builder: (context, orientation, deviceType) {
+              return MaterialApp(
+                navigatorKey: navigatorKey,
+                themeMode: themeMode,
+                onGenerateTitle: onGenerateTitle,
+                onGenerateInitialRoutes: onGenerateInitialRoutes,
+                onUnknownRoute: onUnknownRoute,
+                builder: builder,
+                navigatorObservers: navigatorObservers,
+                color: color,
+                debugShowMaterialGrid: debugShowMaterialGrid,
+                showPerformanceOverlay: showPerformanceOverlay,
+                checkerboardRasterCacheImages: checkerboardRasterCacheImages,
+                checkerboardOffscreenLayers: checkerboardOffscreenLayers,
+                showSemanticsDebugger: showSemanticsDebugger,
+                debugShowCheckedModeBanner: debugShowCheckedModeBanner,
+                shortcuts: shortcuts,
+                actions: actions,
+                title: title ?? "",
+                darkTheme: darkTheme ??
+                    appThemes
+                        .firstWhere(
+                            (theme) => theme.id == getEnv('DARK_THEME_ID'),
+                            orElse: () => appThemes.first)
+                        .data,
+                initialRoute: initialRoute,
+                onGenerateRoute: onGenerateRoute,
+                theme: themeData ?? ThemeProvider.themeOf(context).data,
+                localeResolutionCallback:
+                    (Locale? locale, Iterable<Locale> supportedLocales) {
+                  return locale;
+                },
+                localizationsDelegates: NyLocalization.instance.delegates,
+                locale: locale,
+                supportedLocales:
+                    supportedLocales ?? NyLocalization.instance.locals(),
+              );
+            }),
           ),
         ),
       ),
