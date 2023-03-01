@@ -184,6 +184,7 @@ class _RegisterState extends State<Register> {
                       ),
                       contentPadding: const EdgeInsets.all(10.0),
                       labelText: "Email unsri",
+                      labelStyle: TextStyle(color: Colors.black),
                     ),
                   ),
                 ),
@@ -205,6 +206,7 @@ class _RegisterState extends State<Register> {
                       ),
                       contentPadding: const EdgeInsets.all(10.0),
                       labelText: "Kata Sandi",
+                      labelStyle: TextStyle(color: Colors.black),
                       suffixIcon: ElevatedButton(
                         onPressed: () {
                           lihatPassword();
@@ -238,6 +240,7 @@ class _RegisterState extends State<Register> {
                         borderRadius: BorderRadius.circular(30.0),
                       ),
                       labelText: "Konfirmasi Kata Sandi",
+                      labelStyle: TextStyle(color: Colors.black),
                       suffixIcon: ElevatedButton(
                         onPressed: () {
                           lihatPassword1();

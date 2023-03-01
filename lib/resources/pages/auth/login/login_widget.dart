@@ -169,18 +169,18 @@ class _LoginState extends State<Login> {
                         child: TextFormField(
                           controller: emailCont,
                           decoration: InputDecoration(
-                            prefixIcon: SvgPicture.asset(
-                              cons.assetsIconEmail,
-                              color: cons.colorBackgroundSplashTwo,
-                              fit: BoxFit.none,
-                            ),
-                            hintText: "Email unsri",
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(30.0),
-                            ),
-                            contentPadding: const EdgeInsets.all(10.0),
-                            labelText: "Email unsri",
-                          ),
+                              prefixIcon: SvgPicture.asset(
+                                cons.assetsIconEmail,
+                                color: cons.colorBackgroundSplashTwo,
+                                fit: BoxFit.none,
+                              ),
+                              hintText: "Email unsri",
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(30.0),
+                              ),
+                              contentPadding: const EdgeInsets.all(10.0),
+                              labelText: "Email unsri",
+                              labelStyle: TextStyle(color: Colors.black)),
                         ),
                       ),
                       const SizedBox(height: 8.0),
@@ -201,6 +201,7 @@ class _LoginState extends State<Login> {
                             ),
                             contentPadding: const EdgeInsets.all(10.0),
                             labelText: "Kata Sandi",
+                            labelStyle: TextStyle(color: Colors.black),
                             suffixIcon: ElevatedButton(
                               onPressed: () {
                                 lihatPassword();
