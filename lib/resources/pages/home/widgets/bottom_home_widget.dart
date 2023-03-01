@@ -28,19 +28,9 @@ class _BottomHomeState extends NyState<BottomHome> {
     return BlocBuilder<SelectLocationCubit, SelectLocationState>(
       builder: (context, state) {
         if (state is SelectLocationNotFocused) {
-          return Stack(
-            children: [
-              // pesan
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: BottomPesan(paddingBottom: 90),
-              ),
-              // bottom navigation bar
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: TabNavigation(),
-              ),
-            ],
+          return Align(
+            alignment: Alignment.bottomCenter,
+            child: BottomPesan(paddingBottom: 20),
           );
         }
 
@@ -56,8 +46,9 @@ class _BottomHomeState extends NyState<BottomHome> {
 
   Widget showChooseLocationBottomWidget(
       BuildContext context, SelectLocationFocused stateSelectLocation) {
-    String location =
-        stateSelectLocation.titikJemputFocus ? "Lokasi Jemput" : "Lokasi Tujuan";
+    String location = stateSelectLocation.titikJemputFocus
+        ? "Lokasi Jemput"
+        : "Lokasi Tujuan";
 
     return BlocBuilder<MapCameraCubit, MapCameraState>(
       builder: (context, state) {
