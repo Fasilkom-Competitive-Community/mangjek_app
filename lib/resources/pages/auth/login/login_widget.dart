@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:mangjek_app/resources/pages/home/home_page.dart';
+import 'package:nylo_framework/nylo_framework.dart';
 
 import 'reset_sandi.dart' as reset;
 import '../register/register_widget.dart' as register;
-import '../../../../app/extensions/constructor.dart' as cons;
-// import '../../../../routes/router.dart' as main;
 import '../../home/home_page.dart' as home_page;
+import '../onboarding/splash_screen_widget.dart' as logo;
+import '../../../../app/extensions/constructor.dart' as cons;
 
 FirebaseAuth _auth = FirebaseAuth.instance;
 Stream<User?> get firebaseUserStream => _auth.authStateChanges();
@@ -43,9 +45,10 @@ class _LoginState extends State<Login> {
         if (!mounted) return;
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(
-              builder: (context) => home_page.HomePage(),
+              builder: (context) => logo.Logo(data: userCredential.user),
             ),
             (route) => false);
+        print(userCredential.user.toString());
       } else {
         await _auth.signOut();
         popUpVerifikasi(
