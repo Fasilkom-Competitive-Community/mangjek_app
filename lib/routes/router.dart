@@ -6,6 +6,8 @@ import 'package:nylo_framework/nylo_framework.dart';
 
 import '../resources/pages/auth/onboarding/first_onboarding_widget.dart'
     as first_onboarding_widget;
+import '../resources/pages/auth/login/login_widget.dart' as login;
+import '../resources/pages/auth/onboarding/splash_screen_widget.dart' as logo;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,7 +23,16 @@ import '../resources/pages/auth/onboarding/first_onboarding_widget.dart'
 appRouter() => nyRoutes((router) {
       router.route(ROUTE_INITIAL_PAGE, (context) {
         MediaQuerySingleton.init(MediaQuery.of(context).size);
-        return first_onboarding_widget.OnBoarding();
+        return StreamBuilder(
+          builder: (context, snapshot) {
+            if (snapshot.data == null) {
+              return const first_onboarding_widget.OnBoarding();
+            } else {
+              return logo.Logo(data: snapshot.data);
+            }
+          },
+          stream: login.firebaseUserStream,
+        );
       });
       router.route(ROUTE_PROFILE_PAGE, (context) => ProfileUserPage());
     });

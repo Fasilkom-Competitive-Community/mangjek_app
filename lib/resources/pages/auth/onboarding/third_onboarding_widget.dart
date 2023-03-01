@@ -60,8 +60,8 @@ class _ThirdOnboardingState extends State<ThirdOnboarding> {
               }
             },
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
+                SizedBox(height: 50),
                 Image.asset(
                   cons.assetsImgThirdSpashScreen,
                   width: cons.lebarGambarSplash,
@@ -84,10 +84,11 @@ class _ThirdOnboardingState extends State<ThirdOnboarding> {
                       fontWeight: FontWeight.w500),
                   textAlign: TextAlign.center,
                 ),
-                Container(
-                  decoration: const BoxDecoration(),
-                  height: 130.0,
-                  width: double.infinity,
+                Expanded(
+                  child: Container(
+                    decoration: const BoxDecoration(),
+                    width: double.infinity,
+                  ),
                 ),
                 SizedBox(
                   child: Row(
@@ -140,6 +141,7 @@ class _ThirdOnboardingState extends State<ThirdOnboarding> {
                     ),
                   ),
                 ),
+                SizedBox(height: 50),
               ],
             ),
           ),

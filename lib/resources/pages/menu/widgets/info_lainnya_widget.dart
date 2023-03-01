@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:mangjek_app/app/extensions/string.dart';
 import 'package:mangjek_app/resources/pages/menu/constant.dart';
 import 'package:nylo_framework/nylo_framework.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+import '../../auth/onboarding/first_onboarding_widget.dart'
+    as first_onboarding_widget;
 
 class InfoLainnya extends StatefulWidget {
   const InfoLainnya({super.key});
@@ -50,7 +54,17 @@ class _InfoLainnyaState extends State<InfoLainnya> {
       child: Column(
         children: [
           InkWell(
-            onTap: () {},
+            onTap: () async {
+              await FirebaseAuth.instance.signOut();
+              if (!mounted) return;
+              Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        const first_onboarding_widget.OnBoarding(),
+                  ),
+                  (route) => false);
+            },
             child: Container(
               padding: const EdgeInsets.symmetric(
                 horizontal: defaultHorizontalPadding,
