@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:location/location.dart';
 import 'package:mangjek_app/app/bloc/home/map/map_cubit.dart';
+import 'package:mangjek_app/app/bloc/home/map_camera/map_camera_cubit.dart';
 import 'package:mangjek_app/app/bloc/home/select_location/select_location_cubit.dart';
 import 'package:mangjek_app/app/singleton/location_plugin.dart';
 import 'package:mangjek_app/resources/pages/home/widgets/bottom_home_widget.dart';
@@ -228,6 +229,9 @@ class _HomePageState extends NyState<HomePage> {
             BlocProvider(
               create: (context) => MapCubit(),
             ),
+            BlocProvider(
+              create: (context) => MapCameraCubit(),
+            ),
           ],
           child: Builder(builder: (context) {
             return Container(
@@ -247,6 +251,7 @@ class _HomePageState extends NyState<HomePage> {
                             getImageAsset("choose_location.png"),
                             height: 45,
                             width: 45,
+                            scale: 1.6,
                           ),
                         ),
                       );

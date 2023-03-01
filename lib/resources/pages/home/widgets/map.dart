@@ -1,9 +1,11 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:mangjek_app/app/bloc/home/map/map_cubit.dart';
+import 'package:mangjek_app/app/bloc/home/map_camera/map_camera_cubit.dart';
 import 'package:mangjek_app/app/utils/debouncer.dart';
 import 'package:nylo_framework/nylo_framework.dart';
 
@@ -25,6 +27,7 @@ class _MapState extends NyState<MapWidget> {
       Completer<GoogleMapController>();
 
   late MapCubit _mapCubit;
+  late MapCameraCubit _mapCameraCubit;
 
   final Map<MarkerId, Marker> mapMarkers = Map();
 
@@ -38,9 +41,16 @@ class _MapState extends NyState<MapWidget> {
   void initMapMarkers() {}
 
   GoogleMapController? _mapController;
+  bool isFirstCameraMove = true;
 
   void _onCameraMove(CameraPosition cameraPosition) {
     onMapCameraMoveDebouncer.run(() {
+      if (isFirstCameraMove) {
+        isFirstCameraMove = false;
+      } else {
+        _mapCameraCubit.stopCamera();
+      }
+
       widget._mapCubit.setCurrentMarkerPosition(cameraPosition.target);
     });
   }
@@ -72,6 +82,10 @@ class _MapState extends NyState<MapWidget> {
   @override
   Widget build(BuildContext context) {
     _mapCubit = context.read<MapCubit>();
+    _mapCameraCubit = context.read<MapCameraCubit>();
+    _mapCameraCubit.stream.listen((state) {
+      log("ini state map camera cubit ${state}");
+    });
 
     return GoogleMap(
       mapType: MapType.normal,
@@ -82,6 +96,9 @@ class _MapState extends NyState<MapWidget> {
         target: centerMarkerLocation,
         zoom: 16.5,
       ),
+      onCameraMoveStarted: () {
+        _mapCameraCubit.moveCamera();
+      },
       onCameraMove: _onCameraMove,
       mapToolbarEnabled: false,
       onTap: (loc) {},

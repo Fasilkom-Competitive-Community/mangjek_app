@@ -1,9 +1,4 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mangjek_app/app/bloc/home/map/map_cubit.dart';
-import 'package:mangjek_app/app/bloc/home/select_location/select_location_cubit.dart';
-import 'package:nylo_framework/nylo_framework.dart';
 
 class Search extends StatefulWidget {
   const Search({super.key});

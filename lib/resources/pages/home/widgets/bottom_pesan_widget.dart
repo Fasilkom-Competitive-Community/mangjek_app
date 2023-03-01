@@ -95,6 +95,7 @@ class _BottomPesanState extends NyState<BottomPesan> {
                                   Image.asset(
                                     getImageAsset("ojek.png"),
                                     scale: 3.0,
+                                    width: 90,
                                   ),
                                 ],
                               ),
@@ -105,9 +106,10 @@ class _BottomPesanState extends NyState<BottomPesan> {
                                   Row(
                                     children: [
                                       Padding(
-                                          padding: EdgeInsets.symmetric(
-                                        horizontal: 5,
-                                      )),
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: 5,
+                                        ),
+                                      ),
                                       Text(
                                         "Ojeknya Mangjek",
                                         style: TextStyle(

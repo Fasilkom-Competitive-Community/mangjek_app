@@ -129,6 +129,7 @@ class _TopSelectLocationState extends NyState<TopSelectLocation> {
                           hintText: "Titik Jemput",
                           prefixIcon: Image.asset(
                             getImageAsset("titikJemput.png"),
+                            scale: 3,
                           ),
                           fillColor: Colors.white70,
                         ),
@@ -153,6 +154,7 @@ class _TopSelectLocationState extends NyState<TopSelectLocation> {
                             hintText: "Lokasi Tujuan",
                             prefixIcon: Image.asset(
                               getImageAsset("tujuan.png"),
+                              scale: 3,
                             ),
                             fillColor: Colors.white70),
                       ),

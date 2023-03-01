@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mangjek_app/app/bloc/home/map/map_cubit.dart';
+import 'package:mangjek_app/app/bloc/home/map_camera/map_camera_cubit.dart';
 import 'package:mangjek_app/app/bloc/home/select_location/select_location_cubit.dart';
 import 'package:mangjek_app/app/singleton/media_query.dart';
 import 'package:mangjek_app/resources/pages/home/widgets/bottom_pesan_widget.dart';
@@ -43,7 +44,8 @@ class _BottomHomeState extends NyState<BottomHome> {
           );
         }
 
-        return showChooseLocationBottomWidget(state as SelectLocationFocused);
+        return showChooseLocationBottomWidget(
+            context, state as SelectLocationFocused);
       },
     );
   }
@@ -52,117 +54,128 @@ class _BottomHomeState extends NyState<BottomHome> {
     return "Fasilkom, Indralaya";
   }
 
-  Widget showChooseLocationBottomWidget(SelectLocationFocused state) {
+  Widget showChooseLocationBottomWidget(
+      BuildContext context, SelectLocationFocused stateSelectLocation) {
     String location =
-        state.titikJemputFocus ? "Lokasi Jemput" : "Lokasi Tujuan";
+        stateSelectLocation.titikJemputFocus ? "Lokasi Jemput" : "Lokasi Tujuan";
 
-    return Align(
-      alignment: Alignment.bottomCenter,
-      child: Wrap(
-        children: [
-          Column(
-            children: [
-              // icon to move to current location
-              Container(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
+    return BlocBuilder<MapCameraCubit, MapCameraState>(
+      builder: (context, state) {
+        return Visibility(
+          visible: state is MapCameraStop,
+          child: Align(
+            alignment: Alignment.bottomCenter,
+            child: Wrap(
+              children: [
+                Column(
                   children: [
-                    // Image.asset(),
-                  ],
-                ),
-              ),
+                    // icon to move to current location
+                    Container(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          // Image.asset(),
+                        ],
+                      ),
+                    ),
 
-              // widget to click lanjutkan
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 30,
-                ).copyWith(
-                  top: 30,
-                  bottom: 20,
-                ),
-                width: MediaQuerySingleton.screenSize.width,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(30),
-                    topRight: Radius.circular(30),
-                  ),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(
-                            left: 14,
-                            bottom: 5,
-                          ),
-                          child: Text(
-                            location,
-                            style: TextStyle(
-                              fontWeight: FontWeight.w900,
-                              fontSize: 16,
-                            ),
-                          ),
+                    // widget to click lanjutkan
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 30,
+                      ).copyWith(
+                        top: 30,
+                        bottom: 20,
+                      ),
+                      width: MediaQuerySingleton.screenSize.width,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(30),
+                          topRight: Radius.circular(30),
                         ),
-                        Divider(
-                          color: Colors.grey,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                            left: 14,
-                            bottom: 10,
-                            top: 5,
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Image.asset(getImageAsset("titikJemput.png"), scale: 3.0,),
-                              SizedBox(
-                                width: 10,
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                  left: 14,
+                                  bottom: 5,
+                                ),
+                                child: Text(
+                                  location,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w900,
+                                    fontSize: 16,
+                                  ),
+                                ),
                               ),
-                              Text(getNamedSelectedLocation()),
+                              Divider(
+                                color: Colors.grey,
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                  left: 14,
+                                  bottom: 10,
+                                  top: 5,
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Image.asset(
+                                      getImageAsset("titikJemput.png"),
+                                      scale: 3.0,
+                                    ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Text(getNamedSelectedLocation()),
+                                  ],
+                                ),
+                              ),
                             ],
                           ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Container(
-                      height: 50,
-                      width: MediaQuerySingleton.screenSize.width,
-                      child: ElevatedButton(
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateColor.resolveWith(
-                            (states) => Color(0xFFF3C703),
+                          SizedBox(
+                            height: 20,
                           ),
-                          shape: MaterialStateProperty.all(
-                            RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30),
+                          Container(
+                            height: 50,
+                            width: MediaQuerySingleton.screenSize.width,
+                            child: ElevatedButton(
+                              style: ButtonStyle(
+                                backgroundColor: MaterialStateColor.resolveWith(
+                                  (states) => Color(0xFFF3C703),
+                                ),
+                                shape: MaterialStateProperty.all(
+                                  RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(30),
+                                  ),
+                                ),
+                                textStyle: MaterialStateTextStyle.resolveWith(
+                                  (states) => GoogleFonts.poppins(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ),
+                              onPressed: _onPressLanjutkan,
+                              child: Text("Lanjutkan"),
                             ),
                           ),
-                          textStyle: MaterialStateTextStyle.resolveWith(
-                            (states) => GoogleFonts.poppins(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 16,
-                            ),
-                          ),
-                        ),
-                        onPressed: _onPressLanjutkan,
-                        child: Text("Lanjutkan"),
+                        ],
                       ),
                     ),
                   ],
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 
@@ -181,6 +194,7 @@ class _BottomHomeState extends NyState<BottomHome> {
       selectLocationState.titikTujuanFocusNode.unfocus();
     }
 
-    _mapCubit.selectLocationFromMarker(selectLocationState.titikJemputFocus, selectLocationState.titikTujuanFocus);
+    _mapCubit.selectLocationFromMarker(selectLocationState.titikJemputFocus,
+        selectLocationState.titikTujuanFocus);
   }
 }
