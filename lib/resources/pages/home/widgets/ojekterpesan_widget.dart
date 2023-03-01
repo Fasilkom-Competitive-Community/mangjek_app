@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
-import './extentions.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mangjek_app/app/bloc/home/map/map_cubit.dart';
-import 'package:mangjek_app/app/bloc/home/select_location/select_location_cubit.dart';
-import 'package:nylo_framework/nylo_framework.dart';
+import 'package:mangjek_app/app/extensions/string.dart';
 
 class OjekTerpesan extends StatefulWidget {
   const OjekTerpesan({super.key});
