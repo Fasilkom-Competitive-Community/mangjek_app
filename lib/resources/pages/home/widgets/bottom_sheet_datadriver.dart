@@ -9,12 +9,9 @@ class DataDriver extends StatefulWidget {
 }
 
 class _DataDriverState extends State<DataDriver> {
-
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      shrinkWrap: true,
-      children: [
+    return ListView(shrinkWrap: true, children: [
       Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -141,7 +138,7 @@ class _DataDriverState extends State<DataDriver> {
                                         ),
                                       ],
                                     ),
-                                    const Column(
+                                    Column(
                                       // mainAxisAlignment: MainAxisAlignment.start,
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
@@ -204,7 +201,7 @@ class _DataDriverState extends State<DataDriver> {
                                       ],
                                     ),
                                     Expanded(child: SizedBox.fromSize()),
-                                    const Column(
+                                    Column(
                                       // crossAxisAlignment: CrossAxisAlignment.end,
                                       children: [
                                         // Padding(padding: EdgeInsets.only(right: 5)),
@@ -241,7 +238,7 @@ class _DataDriverState extends State<DataDriver> {
                               padding: EdgeInsets.symmetric(
                                   horizontal: 10, vertical: 15),
                               decoration: BoxDecoration(),
-                              child: const Column(
+                              child: Column(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
                                   Row(
@@ -297,7 +294,7 @@ class _DataDriverState extends State<DataDriver> {
                   ],
                 )),
                 Padding(padding: EdgeInsets.symmetric(vertical: 10)),
-                const Row(
+                Row(
                   children: [
                     Padding(padding: EdgeInsets.only(left: 5)),
                     Text(
