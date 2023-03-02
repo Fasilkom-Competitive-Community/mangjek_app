@@ -1,8 +1,10 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:mangjek_app/routes/constant.dart';
 
 import '../../../../app/extensions/constructor.dart' as cons;
 import '../../home/home_page.dart' as home_page;
@@ -20,12 +22,14 @@ class _LogoState extends State<Logo> with TickerProviderStateMixin {
     var duration = const Duration(seconds: 4);
     return Timer(duration, () {
       if (mounted) {
-        Navigator.pushReplacement(
+        log("here called");
+        Navigator.pushReplacementNamed(
           context,
-          cons.FadePageTransition(
-            tujuan: home_page.HomePage(),
-            // data: widget.data,
-          ),
+          ROUTE_HOME_PAGE,
+          // cons.FadePageTransition(
+          //   tujuan: home_page.HomePage(),
+          //   // data: widget.data,
+          // ),
         );
       }
     });

@@ -41,7 +41,17 @@ class _InfoLainnyaState extends State<InfoLainnya> {
                   'notification-bing.png', 'Pemberitahuan (update fitur)'),
               __listInfo('task-square.png', 'Daftar menjadi driver'),
               __listInfo('book-square.png', 'Tentang aplikasi'),
-              __listInfo('logout.png', 'Log out'),
+              __listInfo('logout.png', 'Log out', onTap: () async {
+                await FirebaseAuth.instance.signOut();
+                if (!mounted) return;
+                Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          const first_onboarding_widget.OnBoarding(),
+                    ),
+                    (route) => false);
+              }),
             ],
           ),
         ],
@@ -49,22 +59,12 @@ class _InfoLainnyaState extends State<InfoLainnya> {
     );
   }
 
-  Widget __listInfo(String imgName, String nameInfo) {
+  Widget __listInfo(String imgName, String nameInfo, {void Function()? onTap}) {
     return Container(
       child: Column(
         children: [
           InkWell(
-            onTap: () async {
-              await FirebaseAuth.instance.signOut();
-              if (!mounted) return;
-              Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) =>
-                        const first_onboarding_widget.OnBoarding(),
-                  ),
-                  (route) => false);
-            },
+            onTap: onTap,
             child: Container(
               padding: const EdgeInsets.symmetric(
                 horizontal: defaultHorizontalPadding,

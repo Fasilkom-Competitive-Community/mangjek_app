@@ -1,5 +1,7 @@
+import 'dart:developer';
 import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mangjek_app/app/extensions/string.dart';
 import 'package:image_picker/image_picker.dart';
@@ -15,6 +17,7 @@ class ProfileUserPage extends StatefulWidget {
 class _ProfileUserState extends State<ProfileUserPage> {
   File? image;
   final ImagePicker _picker = ImagePicker();
+  final User? user = FirebaseAuth.instance.currentUser;
 
   Future getImage() async {
     final XFile? imagePicked =
@@ -62,15 +65,18 @@ class _ProfileUserState extends State<ProfileUserPage> {
                   )
                 : CircleAvatar(
                     radius: 35,
-                    backgroundImage:
-                        AssetImage(getImageAsset('image-profile.png')),
+                    backgroundImage: AssetImage(
+                      getImageAsset('image-profile.png'),
+                    ),
                   ),
             Positioned(
                 bottom: 0,
                 right: 0,
                 child: Container(
                   child: ImageIcon(
-                    AssetImage(getImageAsset('edit.png')),
+                    AssetImage(
+                      getImageAsset('edit.png'),
+                    ),
                     color: 'F3C703'.toColor(),
                   ),
                 )),

@@ -62,16 +62,16 @@ class GeserKanan extends PageRouteBuilder {
   final Widget tujuan;
   GeserKanan({required this.tujuan})
       : super(
-            pageBuilder: (context, animation, secondaryAnimation) => tujuan,
-            transitionsBuilder:
-                (context, animation, secondaryAnimation, child) =>
-                    SlideTransition(
-                      position: Tween<Offset>(
-                        begin: const Offset(-1.0, 0.0),
-                        end: Offset.zero,
-                      ).animate(animation),
-                      child: tujuan,
-                    ));
+          pageBuilder: (context, animation, secondaryAnimation) => tujuan,
+          transitionsBuilder: (context, animation, secondaryAnimation, child) =>
+              SlideTransition(
+            position: Tween<Offset>(
+              begin: const Offset(-1.0, 0.0),
+              end: Offset.zero,
+            ).animate(animation),
+            child: tujuan,
+          ),
+        );
 }
 
 class FadePageTransition extends PageRouteBuilder {

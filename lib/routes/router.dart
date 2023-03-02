@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mangjek_app/app/singleton/media_query.dart';
+import 'package:mangjek_app/resources/pages/home/home_page.dart';
 import 'package:mangjek_app/resources/pages/profile/profile_page.dart';
 import 'package:mangjek_app/routes/constant.dart';
 import 'package:nylo_framework/nylo_framework.dart';
@@ -21,18 +22,23 @@ import '../resources/pages/auth/onboarding/splash_screen_widget.dart' as logo;
 */
 
 appRouter() => nyRoutes((router) {
-      router.route(ROUTE_INITIAL_PAGE, (context) {
-        MediaQuerySingleton.init(MediaQuery.of(context).size);
-        return StreamBuilder(
-          builder: (context, snapshot) {
-            if (snapshot.data == null) {
-              return const first_onboarding_widget.OnBoarding();
-            } else {
-              return logo.Logo(data: snapshot.data);
-            }
-          },
-          stream: login.firebaseUserStream,
-        );
-      });
+      router.route(
+        ROUTE_INITIAL_PAGE,
+        (context) {
+          MediaQuerySingleton.init(MediaQuery.of(context).size);
+          return StreamBuilder(
+            builder: (context, snapshot) {
+              if (snapshot.data == null) {
+                return const first_onboarding_widget.OnBoarding();
+              } else {
+                return logo.Logo(data: snapshot.data);
+              }
+            },
+            stream: login.firebaseUserStream,
+          );
+        },
+        transition: PageTransitionType.fade,
+      );
+      router.route(ROUTE_HOME_PAGE, (context) => HomePage());
       router.route(ROUTE_PROFILE_PAGE, (context) => ProfileUserPage());
     });
