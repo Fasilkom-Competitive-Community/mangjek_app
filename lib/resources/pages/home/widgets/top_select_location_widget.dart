@@ -1,4 +1,6 @@
 import 'dart:developer';
+import 'dart:convert';
+import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -7,6 +9,8 @@ import 'package:mangjek_app/app/bloc/home/select_location/select_location_cubit.
 import 'package:mangjek_app/routes/constant.dart';
 import 'package:nylo_framework/nylo_framework.dart';
 import 'package:sizer/sizer.dart';
+import 'package:location/location.dart';
+import 'package:http/http.dart' as http;
 
 class TopSelectLocation extends NyStatefulWidget {
   TopSelectLocation({super.key});
@@ -17,18 +21,82 @@ class TopSelectLocation extends NyStatefulWidget {
 
 class _TopSelectLocationState extends NyState<TopSelectLocation> {
   late SelectLocationCubit selectLocationCubit;
+  final String apiKey = "AIzaSyDIcTGa61FUTuSvoN1W5oRaLlF3K-Bfbmo";
+  // final textController = TextEditingController();
 
-  final lokasiSuggestions = {
-    0: "Fasilkom, Indralaya",
-    1: "FKIP, Indralaya",
-  };
+  LocationData? currentLocation;
+  String? lokasi;
+  List<dynamic> lokasiSuggestions = [];
+  String? teks;
+  String? alamat;
+  Map<String, dynamic>? geoLatLng;
+
+  void getCurrentLocation() {
+    Location location = Location();
+
+    location.getLocation().then((location) {
+      setState(() {
+        currentLocation = location;
+      });
+    });
+    location.onLocationChanged.listen((newLoc) {
+      setState(() {
+        currentLocation = newLoc;
+        lokasi = (currentLocation!.latitude!).toString() +
+            ',' +
+            (currentLocation!.longitude!).toString();
+        // srcLoc =
+        //     LatLng(currentLocation!.latitude!, currentLocation!.longitude!);
+      });
+    });
+  }
+
+  void getSuggestion(String input) async {
+    print("test");
+    String baseUrl =
+        "https://maps.googleapis.com/maps/api/place/autocomplete/json";
+    String req =
+        "$baseUrl?location=-3.218753,104.649665&strictbounds=true&radius=2000&input=$input&language=id&region=id&key=$apiKey";
+    var response = await http.get(Uri.parse((req)));
+    var data = response.body.toString();
+    print(data);
+    if (response.statusCode == 200) {
+      setState(() {
+        lokasiSuggestions = jsonDecode(response.body.toString())['predictions'];
+      });
+    } else {
+      throw Exception("Gagal Load data");
+    }
+  }
+
+  void getLocationLatLng(String placeID) async {
+    String apiKey = "AIzaSyDIcTGa61FUTuSvoN1W5oRaLlF3K-Bfbmo";
+    String baseUrl = "https://maps.googleapis.com/maps/api/place/details/json";
+    String req = "$baseUrl?place_id=$placeID&key=$apiKey";
+    var response = await http.get(Uri.parse((req)));
+
+    var data = response.body.toString();
+
+    if (response.statusCode == 200) {
+      setState(() {
+        geoLatLng = jsonDecode(response.body.toString())['result']['geometry']
+            ['location'];
+      });
+    } else {
+      throw Exception("Gagal Load data");
+    }
+  }
+
+  // final lokasiSuggestions = {
+  //   0: "Fasilkom, Indralaya",
+  //   1: "FKIP, Indralaya",
+  // };
 
   @override
   init() async {
     super.init();
     selectLocationCubit = context.read<SelectLocationCubit>();
     selectLocationCubit.reinitFocusNodeIfNeeded();
-
     initFocusNodeListener();
   }
 
@@ -135,7 +203,7 @@ class _TopSelectLocationState extends NyState<TopSelectLocation> {
             ),
             height: 145,
             child: ListView.builder(
-              itemCount: 2,
+              itemCount: 5,
               itemBuilder: (context, index) {
                 const border = BorderSide(
                   color: Color(0xFFD4D8D6),
@@ -144,7 +212,9 @@ class _TopSelectLocationState extends NyState<TopSelectLocation> {
                   color: Colors.transparent,
                   child: InkWell(
                     onTap: () {
-                      print("tapped");
+                      var placeID =
+                          lokasiSuggestions[index]['place_id'].toString();
+                      getLocationLatLng(placeID);
                     },
                     child: Container(
                       decoration: BoxDecoration(
@@ -156,7 +226,9 @@ class _TopSelectLocationState extends NyState<TopSelectLocation> {
                       padding: const EdgeInsets.symmetric(
                         vertical: 15,
                       ),
-                      child: Text(lokasiSuggestions[index] ?? ""),
+                      child: Text(lokasiSuggestions[index]
+                              ['structured_formatting']['main_text'] ??
+                          ""),
                     ),
                   ),
                 );
@@ -185,6 +257,8 @@ class _TopSelectLocationState extends NyState<TopSelectLocation> {
 
     selectLocationCubit.focusNodeLokasiTujuan = null;
     selectLocationCubit.focusNodeTitikJemput = null;
+
+    // textController.dispose();
 
     super.dispose();
   }
@@ -261,7 +335,9 @@ class _TopSelectLocationState extends NyState<TopSelectLocation> {
                       child: TextField(
                         enabled: state is MapReady,
                         focusNode: selectLocationCubit.focusNodeTitikJemput,
-                        onChanged: (value) => {},
+                        onChanged: (value) => {
+                          (value) => {getSuggestion(value)}
+                        },
                         // style: TextStyle(color: Colors.pinkAccent, height:
                         //     MediaQuery.of(context).size.height/80),
                         decoration: InputDecoration(
@@ -288,7 +364,8 @@ class _TopSelectLocationState extends NyState<TopSelectLocation> {
                       child: TextField(
                         enabled: state is MapReady,
                         focusNode: selectLocationCubit.focusNodeLokasiTujuan,
-                        onChanged: (value) => {},
+                        onChanged: (value) => {getSuggestion(value)},
+                        // onSubmitted: (value) => {},
                         decoration: InputDecoration(
                             contentPadding: EdgeInsets.symmetric(vertical: 10),
                             border: OutlineInputBorder(
