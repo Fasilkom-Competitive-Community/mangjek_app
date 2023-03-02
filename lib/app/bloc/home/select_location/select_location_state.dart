@@ -8,17 +8,11 @@ abstract class SelectLocationState extends Equatable {
 }
 
 class SelectLocationFocused extends SelectLocationState {
-  final FocusNode titikJemputFocusNode;
   late final bool titikJemputFocus;
-
-  final FocusNode titikTujuanFocusNode;
   late final bool titikTujuanFocus;
 
-  SelectLocationFocused(this.titikJemputFocusNode, this.titikTujuanFocusNode)
-      : super(true) {
-    this.titikJemputFocus = titikJemputFocusNode.hasFocus;
-    this.titikTujuanFocus = titikTujuanFocusNode.hasFocus;
-  }
+  SelectLocationFocused(this.titikJemputFocus, this.titikTujuanFocus)
+      : super(true) {}
 
   @override
   List<Object?> get props => [isFocus, titikJemputFocus, titikTujuanFocus];

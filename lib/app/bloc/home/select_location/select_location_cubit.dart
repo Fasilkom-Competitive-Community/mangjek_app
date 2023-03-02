@@ -7,10 +7,23 @@ part 'select_location_state.dart';
 class SelectLocationCubit extends Cubit<SelectLocationState> {
   SelectLocationCubit() : super(SelectLocationNotFocused());
 
-  void focusSelectLocation(
-      FocusNode titikJemputFocus, FocusNode titikTujuanFocus) {
-    if (titikJemputFocus.hasFocus || titikTujuanFocus.hasFocus) {
-      emit(SelectLocationFocused(titikJemputFocus, titikTujuanFocus));
+  FocusNode focusNodeTitikJemput = FocusNode(debugLabel: "focus_titik_jemput");
+  FocusNode focusNodeLokasiTujuan = FocusNode(debugLabel: "focus_titik_tujuan");
+
+  // 0 => titik jemput focused 
+  // 1 => titik tujuan focused 
+  int lastIndexFocused = 0;
+
+  void setLastIndexFocused(int newIndex) {
+    lastIndexFocused = newIndex;
+  }
+
+  void focusSelectLocation() {
+    if (focusNodeTitikJemput.hasFocus || focusNodeLokasiTujuan.hasFocus) {
+      emit(
+        SelectLocationFocused(
+            focusNodeTitikJemput.hasFocus, focusNodeLokasiTujuan.hasFocus),
+      );
     } else {
       emit(SelectLocationNotFocused());
     }

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mangjek_app/app/bloc/globals/init.dart';
 import 'package:nylo_framework/nylo_framework.dart';
 import 'package:sizer/sizer.dart';
 
@@ -71,41 +73,44 @@ class AppBuild extends StatelessWidget {
                 ValueNotifier(locale ?? NyLocalization.instance.locale),
             builder: (context, Locale locale, _) =>
                 Sizer(builder: (context, orientation, deviceType) {
-              return MaterialApp(
-                navigatorKey: navigatorKey,
-                themeMode: themeMode,
-                onGenerateTitle: onGenerateTitle,
-                onGenerateInitialRoutes: onGenerateInitialRoutes,
-                onUnknownRoute: onUnknownRoute,
-                builder: builder,
-                navigatorObservers: navigatorObservers,
-                color: color,
-                debugShowMaterialGrid: debugShowMaterialGrid,
-                showPerformanceOverlay: showPerformanceOverlay,
-                checkerboardRasterCacheImages: checkerboardRasterCacheImages,
-                checkerboardOffscreenLayers: checkerboardOffscreenLayers,
-                showSemanticsDebugger: showSemanticsDebugger,
-                debugShowCheckedModeBanner: debugShowCheckedModeBanner,
-                shortcuts: shortcuts,
-                actions: actions,
-                title: title ?? "",
-                darkTheme: darkTheme ??
-                    appThemes
-                        .firstWhere(
-                            (theme) => theme.id == getEnv('DARK_THEME_ID'),
-                            orElse: () => appThemes.first)
-                        .data,
-                initialRoute: initialRoute,
-                onGenerateRoute: onGenerateRoute,
-                theme: themeData ?? ThemeProvider.themeOf(context).data,
-                localeResolutionCallback:
-                    (Locale? locale, Iterable<Locale> supportedLocales) {
-                  return locale;
-                },
-                localizationsDelegates: NyLocalization.instance.delegates,
-                locale: locale,
-                supportedLocales:
-                    supportedLocales ?? NyLocalization.instance.locals(),
+              return MultiBlocProvider(
+                providers: GlobalProviders,
+                child: MaterialApp(
+                  navigatorKey: navigatorKey,
+                  themeMode: themeMode,
+                  onGenerateTitle: onGenerateTitle,
+                  onGenerateInitialRoutes: onGenerateInitialRoutes,
+                  onUnknownRoute: onUnknownRoute,
+                  builder: builder,
+                  navigatorObservers: navigatorObservers,
+                  color: color,
+                  debugShowMaterialGrid: debugShowMaterialGrid,
+                  showPerformanceOverlay: showPerformanceOverlay,
+                  checkerboardRasterCacheImages: checkerboardRasterCacheImages,
+                  checkerboardOffscreenLayers: checkerboardOffscreenLayers,
+                  showSemanticsDebugger: showSemanticsDebugger,
+                  debugShowCheckedModeBanner: debugShowCheckedModeBanner,
+                  shortcuts: shortcuts,
+                  actions: actions,
+                  title: title ?? "",
+                  darkTheme: darkTheme ??
+                      appThemes
+                          .firstWhere(
+                              (theme) => theme.id == getEnv('DARK_THEME_ID'),
+                              orElse: () => appThemes.first)
+                          .data,
+                  initialRoute: initialRoute,
+                  onGenerateRoute: onGenerateRoute,
+                  theme: themeData ?? ThemeProvider.themeOf(context).data,
+                  localeResolutionCallback:
+                      (Locale? locale, Iterable<Locale> supportedLocales) {
+                    return locale;
+                  },
+                  localizationsDelegates: NyLocalization.instance.delegates,
+                  locale: locale,
+                  supportedLocales:
+                      supportedLocales ?? NyLocalization.instance.locals(),
+                ),
               );
             }),
           ),

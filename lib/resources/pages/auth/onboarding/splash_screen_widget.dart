@@ -22,7 +22,6 @@ class _LogoState extends State<Logo> with TickerProviderStateMixin {
     var duration = const Duration(seconds: 4);
     return Timer(duration, () {
       if (mounted) {
-        log("here called");
         Navigator.pushReplacementNamed(
           context,
           ROUTE_HOME_PAGE,

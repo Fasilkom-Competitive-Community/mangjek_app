@@ -4,9 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:location/location.dart';
-import 'package:mangjek_app/app/bloc/home/map/map_cubit.dart';
 import 'package:mangjek_app/app/bloc/home/map_camera/map_camera_cubit.dart';
-import 'package:mangjek_app/app/bloc/home/select_location/select_location_cubit.dart';
 import 'package:mangjek_app/app/bloc/tab_navigation/tab_navigation_cubit.dart';
 import 'package:mangjek_app/app/singleton/location_plugin.dart';
 import 'package:mangjek_app/resources/pages/home/home_page_inner.dart';
@@ -113,22 +111,9 @@ class _HomePageState extends NyState<HomePage> {
         extendBody: true,
         bottomNavigationBar: TabNavigation(),
         body: SafeArea(
-          child: MultiBlocProvider(
-            providers: [
-              BlocProvider<SelectLocationCubit>(
-                create: (context) => SelectLocationCubit(),
-              ),
-              BlocProvider(
-                create: (context) => MapCubit(),
-              ),
-              BlocProvider(
-                create: (context) => MapCameraCubit(),
-              ),
-            ],
-            child: BlocBuilder<TabNavigationCubit, TabNavigationState>(
-              builder: (context, state) =>
-                  mapPageNavigation[state.activeIndex] ?? Container(),
-            ),
+          child: BlocBuilder<TabNavigationCubit, TabNavigationState>(
+            builder: (context, state) =>
+                mapPageNavigation[state.activeIndex] ?? Container(),
           ),
         ),
       ),

@@ -45,6 +45,7 @@ class _MapState extends NyState<MapWidget> {
     super.dispose();
     _mapController?.dispose();
     _onLocationChangesStreamSubs.cancel();
+    onMapCameraMoveDebouncer.cancel();
   }
 
   void initMapMarkers() {}

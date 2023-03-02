@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:mangjek_app/app/singleton/media_query.dart';
 import 'package:mangjek_app/resources/pages/home/home_page.dart';
+import 'package:mangjek_app/resources/pages/orders/choose_from_map/choose_from_map_page.dart';
 import 'package:mangjek_app/resources/pages/profile/profile_page.dart';
 import 'package:mangjek_app/routes/constant.dart';
 import 'package:nylo_framework/nylo_framework.dart';
 
+import '../resources/pages/auth/login/login_widget.dart' as login;
 import '../resources/pages/auth/onboarding/first_onboarding_widget.dart'
     as first_onboarding_widget;
-import '../resources/pages/auth/login/login_widget.dart' as login;
 import '../resources/pages/auth/onboarding/splash_screen_widget.dart' as logo;
 
 /*
@@ -39,6 +40,20 @@ appRouter() => nyRoutes((router) {
         },
         transition: PageTransitionType.fade,
       );
-      router.route(ROUTE_HOME_PAGE, (context) => HomePage());
-      router.route(ROUTE_PROFILE_PAGE, (context) => ProfileUserPage());
+
+      router.route(
+        ROUTE_HOME_PAGE,
+        (context) => HomePage(),
+      );
+
+      router.route(
+        ROUTE_PROFILE_PAGE,
+        (context) => ProfileUserPage(),
+      );
+
+      // order routes
+      router.route(
+        ROUTE_ORDERS_CHOOSE_FROM_MAP_PAGE,
+        (context) => ChooseFromMapPage(),
+      );
     });
