@@ -27,6 +27,8 @@ class _TopSelectLocationState extends NyState<TopSelectLocation> {
   init() async {
     super.init();
     selectLocationCubit = context.read<SelectLocationCubit>();
+    selectLocationCubit.reinitFocusNodeIfNeeded();
+
     initFocusNodeListener();
   }
 
@@ -89,8 +91,8 @@ class _TopSelectLocationState extends NyState<TopSelectLocation> {
                       data: state.titikJemputFocus,
                       onPop: (_) {
                         if (selectLocationCubit.lastIndexFocused == 0) {
-                          selectLocationCubit.focusNodeTitikJemput.unfocus();
-                          selectLocationCubit.focusNodeLokasiTujuan
+                          selectLocationCubit.focusNodeTitikJemput!.unfocus();
+                          selectLocationCubit.focusNodeLokasiTujuan!
                               .requestFocus();
                         } else {
                           WidgetsBinding.instance.focusManager.primaryFocus
@@ -167,19 +169,23 @@ class _TopSelectLocationState extends NyState<TopSelectLocation> {
   }
 
   void initFocusNodeListener() {
-    selectLocationCubit.focusNodeLokasiTujuan.addListener(() {
+    selectLocationCubit.focusNodeLokasiTujuan!.addListener(() {
       selectLocationCubit.focusSelectLocation();
     });
 
-    selectLocationCubit.focusNodeTitikJemput.addListener(() {
+    selectLocationCubit.focusNodeTitikJemput!.addListener(() {
       selectLocationCubit.focusSelectLocation();
     });
   }
 
   @override
   void dispose() {
-    selectLocationCubit.focusNodeLokasiTujuan.dispose();
-    selectLocationCubit.focusNodeTitikJemput.dispose();
+    selectLocationCubit.focusNodeLokasiTujuan!.dispose();
+    selectLocationCubit.focusNodeTitikJemput!.dispose();
+
+    selectLocationCubit.focusNodeLokasiTujuan = null;
+    selectLocationCubit.focusNodeTitikJemput = null;
+
     super.dispose();
   }
 
