@@ -31,11 +31,20 @@ class _MapState extends NyState<MapWidget> {
 
   final Map<MarkerId, Marker> mapMarkers = Map();
 
+  late StreamSubscription _onLocationChangesStreamSubs;
+
   @override
   init() async {
     super.init();
     initMapMarkers();
-    widget._mapCubit.stream.listen(_onLocationChanges);
+    _onLocationChangesStreamSubs = widget._mapCubit.stream.listen(_onLocationChanges);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _mapController?.dispose();
+    _onLocationChangesStreamSubs.cancel();
   }
 
   void initMapMarkers() {}
@@ -83,9 +92,6 @@ class _MapState extends NyState<MapWidget> {
   Widget build(BuildContext context) {
     _mapCubit = context.read<MapCubit>();
     _mapCameraCubit = context.read<MapCameraCubit>();
-    _mapCameraCubit.stream.listen((state) {
-      log("ini state map camera cubit ${state}");
-    });
 
     return GoogleMap(
       mapType: MapType.normal,

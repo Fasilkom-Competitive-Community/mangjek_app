@@ -49,13 +49,20 @@ class ThemeConfig {
         colors: lightColors,
       );
 
-  // DARK
   static BaseThemeConfig dark() => BaseThemeConfig(
         id: getEnv('DARK_THEME_ID'),
-        description: "Dark theme",
-        theme: darkTheme(darkColors),
-        colors: darkColors,
+        description:  "Dark theme",
+        theme: lightTheme(lightColors),
+        colors: lightColors,
       );
+
+  // DARK
+  // static BaseThemeConfig dark() => BaseThemeConfig(
+  //       id: getEnv('DARK_THEME_ID'),
+  //       description: "Dark theme",
+  //       theme: darkTheme(darkColors),
+  //       colors: darkColors,
+  //     );
 
   // E.G. CUSTOM THEME
   /// Run: "flutter pub run nylo_framework:main make:theme bright_theme" // example bright_theme

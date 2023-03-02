@@ -14,56 +14,51 @@ class _ProfileTabState extends NyState<ProfileTab> {
     return Container(
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Flexible(
-            flex: 1,
+          Expanded(
+            flex: 2,
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: CircleAvatar(
+                backgroundImage: AssetImage(
+                  getImageAsset('image-profile.png'),
+                ),
+                maxRadius: 25,
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 7,
             child: Container(
-              child: Row(
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  CircleAvatar(
-                    backgroundImage: AssetImage(
-                      getImageAsset('image-profile.png'),
-                    ),
-                    maxRadius: 25,
+                  Text(
+                    'Gandi Subara',
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.w500),
                   ),
-                  Container(
-                    margin: EdgeInsets.fromLTRB(10, 2, 2, 0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Gandi Subara',
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 16.0,
-                              fontWeight: FontWeight.w500),
-                        ),
-                        Text(
-                          "Fasilkom",
-                          style: TextStyle(color: Colors.black, fontSize: 10.0),
-                        ),
-                      ],
-                    ),
+                  Text(
+                    "Fasilkom",
+                    style: TextStyle(color: Colors.black, fontSize: 10.0),
                   ),
                 ],
               ),
             ),
           ),
-          Flexible(
+          Expanded(
             flex: 1,
             child: Container(
-                child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Container(
-                  child: Image.asset(
-                    getImageAsset('edit.png'),
-                  ),
-                  margin: EdgeInsets.fromLTRB(0, 10.5, 0, 10.5),
-                )
-              ],
-            )),
+              child: Container(
+                child: Image.asset(
+                  getImageAsset('edit.png'),
+                ),
+                margin: EdgeInsets.fromLTRB(0, 10.5, 0, 10.5),
+              ),
+            ),
           )
         ],
       ),
