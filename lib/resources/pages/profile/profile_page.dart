@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:mangjek_app/app/extensions/string.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:nylo_framework/nylo_framework.dart';
 
 class ProfileUserPage extends StatefulWidget {
   const ProfileUserPage({super.key});
@@ -61,14 +62,15 @@ class _ProfileUserState extends State<ProfileUserPage> {
                   )
                 : CircleAvatar(
                     radius: 35,
-                    backgroundImage: AssetImage('assets/img/image-profile.png'),
+                    backgroundImage:
+                        AssetImage(getImageAsset('image-profile.png')),
                   ),
             Positioned(
                 bottom: 0,
                 right: 0,
                 child: Container(
                   child: ImageIcon(
-                    AssetImage('assets/img/edit.png'),
+                    AssetImage(getImageAsset('edit.png')),
                     color: 'F3C703'.toColor(),
                   ),
                 )),
@@ -154,7 +156,7 @@ class _ProfileUserState extends State<ProfileUserPage> {
                   prefixIcon: Padding(
                     padding: EdgeInsets.only(left: 5),
                     child: Image.asset(
-                      'assets/img/' + labelIcon,
+                      getImageAsset(labelIcon),
                       color: 'F3C703'.toColor(),
                     ),
                   ),
