@@ -45,7 +45,6 @@ class _LoginState extends State<Login> {
               builder: (context) => logo.Logo(data: userCredential.user),
             ),
             (route) => false);
-        print(userCredential.user.toString());
       } else {
         await _auth.signOut();
         popUpVerifikasi(

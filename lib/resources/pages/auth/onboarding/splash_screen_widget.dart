@@ -1,13 +1,14 @@
 import 'dart:async';
 import 'dart:developer';
+import 'dart:convert';
+import 'dart:io';
 
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mangjek_app/routes/constant.dart';
 
 import '../../../../app/extensions/constructor.dart' as cons;
-import '../../home/home_page.dart' as home_page;
 
 class Logo extends StatefulWidget {
   const Logo({super.key, required this.data});
@@ -18,18 +19,24 @@ class Logo extends StatefulWidget {
 }
 
 class _LogoState extends State<Logo> with TickerProviderStateMixin {
+  bool router = true;
+  String validasi = "";
+
   splashScreen() async {
     var duration = const Duration(seconds: 4);
     return Timer(duration, () {
       if (mounted) {
-        Navigator.pushReplacementNamed(
-          context,
-          ROUTE_HOME_PAGE,
-          // cons.FadePageTransition(
-          //   tujuan: home_page.HomePage(),
-          //   // data: widget.data,
-          // ),
-        );
+        if (router == true) {
+          Navigator.pushReplacementNamed(
+            context,
+            ROUTE_HOME_PAGE,
+          );
+        } else {
+          Navigator.pushReplacementNamed(
+            context,
+            ROUTE_PROFILE_PAGE,
+          );
+        }
       }
     });
   }
@@ -50,8 +57,37 @@ class _LogoState extends State<Logo> with TickerProviderStateMixin {
 
   @override
   void initState() {
+    _getReq();
     splashScreen();
     super.initState();
+  }
+
+  Future _getReq() async {
+    FirebaseAuth _auth = FirebaseAuth.instance;
+    String uid = _auth.currentUser!.uid.toString();
+    String? token = await _auth.currentUser!.getIdToken();
+    String url = "https://mangjek.nabiel.my.id/api/v1/users/" + uid;
+
+    final response = await http.get(
+      Uri.parse(url),
+      headers: {
+        HttpHeaders.authorizationHeader: "Bearer " + token,
+      },
+    );
+    var responseData = jsonDecode(response.body);
+    setState(() {
+      validasi = response.statusCode.toString();
+    });
+    _startPage(validasi);
+    return responseData;
+  }
+
+  void _startPage(String validasi) {
+    if (validasi == "404") {
+      setState(() {
+        router = false;
+      });
+    }
   }
 
   @override
