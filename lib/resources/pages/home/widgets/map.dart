@@ -37,7 +37,8 @@ class _MapState extends NyState<MapWidget> {
   init() async {
     super.init();
     initMapMarkers();
-    _onLocationChangesStreamSubs = widget._mapCubit.stream.listen(_onLocationChanges);
+    _onLocationChangesStreamSubs =
+        widget._mapCubit.stream.listen(_onLocationChanges);
   }
 
   @override

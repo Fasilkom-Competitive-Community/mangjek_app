@@ -11,8 +11,19 @@ class MapCubit extends Cubit<MapState> {
   MapCubit() : super(MapInitial());
 
   late LatLng markerPosition;
+  late LatLng titikJemputPosition;
+  late LatLng tujuanPosition;
 
-  void mapIsReady(LatLng cameraLocation) => emit(MapReady(cameraLocation, true, false));
+  void mapIsReady(LatLng cameraLocation) =>
+      emit(MapReady(cameraLocation, true, false));
+
+  void setTitikJemputPosition(LatLng loc) {
+    this.titikJemputPosition = loc;
+  }
+
+  void setTujuanPosition(LatLng loc) {
+    this.tujuanPosition = loc;
+  }
 
   void setCurrentMarkerPosition(LatLng markerPosition) {
     this.markerPosition = markerPosition;
@@ -24,7 +35,8 @@ class MapCubit extends Cubit<MapState> {
     emit(MapReady(currentLoc, isSource, isDestination));
   }
 
-  Future<void> selectLocationFromMarker(bool isSource, bool isDestination) async {
+  Future<void> selectLocationFromMarker(
+      bool isSource, bool isDestination) async {
     emit(MapReady(markerPosition, isSource, isDestination));
   }
 }

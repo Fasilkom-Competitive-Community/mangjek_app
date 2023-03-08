@@ -11,6 +11,7 @@ import 'package:nylo_framework/nylo_framework.dart';
 import 'package:sizer/sizer.dart';
 import 'package:location/location.dart';
 import 'package:http/http.dart' as http;
+import 'package:mangjek_app/resources/pages/home/objLoc.dart';
 
 class TopSelectLocation extends NyStatefulWidget {
   TopSelectLocation({super.key});
@@ -23,6 +24,7 @@ class _TopSelectLocationState extends NyState<TopSelectLocation> {
   late SelectLocationCubit selectLocationCubit;
   final String apiKey = "AIzaSyDIcTGa61FUTuSvoN1W5oRaLlF3K-Bfbmo";
   // final textController = TextEditingController();
+  objLoc dataLokasi = new objLoc();
 
   LocationData? currentLocation;
   String? lokasi;
@@ -59,10 +61,15 @@ class _TopSelectLocationState extends NyState<TopSelectLocation> {
         "$baseUrl?location=-3.218753,104.649665&strictbounds=true&radius=2000&input=$input&language=id&region=id&key=$apiKey";
     var response = await http.get(Uri.parse((req)));
     var data = response.body.toString();
-    print(data);
     if (response.statusCode == 200) {
       setState(() {
         lokasiSuggestions = jsonDecode(response.body.toString())['predictions'];
+        for (var i = 0; i < lokasiSuggestions.length; i++) {
+          print(lokasiSuggestions[i]);
+          print("");
+        }
+        var panjang = lokasiSuggestions.length;
+        print("Total lokasi yang ditampilkan $panjang");
       });
     } else {
       throw Exception("Gagal Load data");
@@ -80,7 +87,10 @@ class _TopSelectLocationState extends NyState<TopSelectLocation> {
     if (response.statusCode == 200) {
       setState(() {
         geoLatLng = jsonDecode(response.body.toString())['result']['geometry']
-            ['location'];
+            ['location']['lat'];
+        // dataLokasi.latitude = geoLatLng['lat'].toString();
+        // print(dataLokasi.latitude.toString());
+        // print(geoLatLng['lat']);
       });
     } else {
       throw Exception("Gagal Load data");
@@ -203,7 +213,9 @@ class _TopSelectLocationState extends NyState<TopSelectLocation> {
             ),
             height: 145,
             child: ListView.builder(
-              itemCount: 5,
+              physics: ScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: lokasiSuggestions.length,
               itemBuilder: (context, index) {
                 const border = BorderSide(
                   color: Color(0xFFD4D8D6),
@@ -215,6 +227,7 @@ class _TopSelectLocationState extends NyState<TopSelectLocation> {
                       var placeID =
                           lokasiSuggestions[index]['place_id'].toString();
                       getLocationLatLng(placeID);
+                      print(geoLatLng);
                     },
                     child: Container(
                       decoration: BoxDecoration(
@@ -335,9 +348,8 @@ class _TopSelectLocationState extends NyState<TopSelectLocation> {
                       child: TextField(
                         enabled: state is MapReady,
                         focusNode: selectLocationCubit.focusNodeTitikJemput,
-                        onChanged: (value) => {
-                          (value) => {getSuggestion(value)}
-                        },
+                        onChanged: (value) => {getSuggestion(value)},
+                        // onSubmitted: (value) => {},
                         // style: TextStyle(color: Colors.pinkAccent, height:
                         //     MediaQuery.of(context).size.height/80),
                         decoration: InputDecoration(
