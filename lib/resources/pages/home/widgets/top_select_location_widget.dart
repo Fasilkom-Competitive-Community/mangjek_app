@@ -12,6 +12,7 @@ import 'package:sizer/sizer.dart';
 import 'package:location/location.dart';
 import 'package:http/http.dart' as http;
 import 'package:mangjek_app/resources/pages/home/objLoc.dart';
+import 'package:mangjek_app/app/utils/debouncer.dart';
 
 class TopSelectLocation extends NyStatefulWidget {
   TopSelectLocation({super.key});
@@ -26,12 +27,20 @@ class _TopSelectLocationState extends NyState<TopSelectLocation> {
   // final textController = TextEditingController();
   objLoc dataLokasi = new objLoc();
 
+  Debouncer onTextChange = Debouncer(milliseconds: 600);
+
   LocationData? currentLocation;
   String? lokasi;
   List<dynamic> lokasiSuggestions = [];
   String? teks;
   String? alamat;
   Map<String, dynamic>? geoLatLng;
+
+  void _onTextChange(String value) {
+    onTextChange.run(() {
+      getSuggestion(value);
+    });
+  }
 
   void getCurrentLocation() {
     Location location = Location();
@@ -152,7 +161,7 @@ class _TopSelectLocationState extends NyState<TopSelectLocation> {
                           SizedBox(
                             width: 1.w,
                           ),
-                          Text("Lokasi saat ini")
+                          Text("Lokasi saat ini"),
                         ],
                       ),
                     ),
@@ -270,6 +279,7 @@ class _TopSelectLocationState extends NyState<TopSelectLocation> {
 
     selectLocationCubit.focusNodeLokasiTujuan = null;
     selectLocationCubit.focusNodeTitikJemput = null;
+    onTextChange.cancel();
 
     // textController.dispose();
 
@@ -348,8 +358,8 @@ class _TopSelectLocationState extends NyState<TopSelectLocation> {
                       child: TextField(
                         enabled: state is MapReady,
                         focusNode: selectLocationCubit.focusNodeTitikJemput,
-                        onChanged: (value) => {getSuggestion(value)},
-                        // onSubmitted: (value) => {},
+                        onChanged: (value) => {_onTextChange(value)},
+                        // onSubmitted: (value) => {getSuggestion(value)},
                         // style: TextStyle(color: Colors.pinkAccent, height:
                         //     MediaQuery.of(context).size.height/80),
                         decoration: InputDecoration(
@@ -376,8 +386,8 @@ class _TopSelectLocationState extends NyState<TopSelectLocation> {
                       child: TextField(
                         enabled: state is MapReady,
                         focusNode: selectLocationCubit.focusNodeLokasiTujuan,
-                        onChanged: (value) => {getSuggestion(value)},
-                        // onSubmitted: (value) => {},
+                        onChanged: (value) => {_onTextChange(value)},
+                        // onSubmitted: (value) => {getSuggestion(value)},
                         decoration: InputDecoration(
                             contentPadding: EdgeInsets.symmetric(vertical: 10),
                             border: OutlineInputBorder(
