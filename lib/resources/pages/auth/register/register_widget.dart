@@ -324,7 +324,8 @@ class _RegisterState extends State<Register> {
                       backgroundColor: cons.colorBackgroundSplashTwo,
                       elevation: 0,
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(50.0)),
+                          borderRadius:
+                              BorderRadius.circular(cons.borderRadius)),
                     ),
                     child: const Text(
                       "Daftar Sekarang",

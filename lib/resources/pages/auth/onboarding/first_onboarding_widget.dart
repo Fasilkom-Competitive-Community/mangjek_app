@@ -113,7 +113,7 @@ class _OnBoardingState extends State<OnBoarding> {
                       backgroundColor: cons.colorButtonSplash,
                       elevation: 0,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30.0),
+                        borderRadius: BorderRadius.circular(cons.borderRadius),
                       ),
                     ),
                     onPressed: () {

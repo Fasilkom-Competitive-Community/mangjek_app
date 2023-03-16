@@ -158,7 +158,8 @@ class _ResetSandiState extends State<ResetSandi> {
                       backgroundColor: cons.colorBackgroundSplashTwo,
                       elevation: 0,
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(50.0)),
+                          borderRadius:
+                              BorderRadius.circular(cons.borderRadius)),
                     ),
                     child: const Text(
                       "Verifikasi Sekarang",

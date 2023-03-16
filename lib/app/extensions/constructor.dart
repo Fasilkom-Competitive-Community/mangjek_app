@@ -7,6 +7,7 @@ const stringTitle = "Sikuning";
 
 // Size {
 const sizePadding = 20.0;
+const borderRadius = 14.0;
 const tinggiButtonSplashScreen = 60.0;
 const lebarButtonSplashScreen = 100.0;
 const lebarGambarSplash = 280.0;

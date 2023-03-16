@@ -256,7 +256,8 @@ class _LoginState extends State<Login> {
                             backgroundColor: cons.colorBackgroundSplashTwo,
                             elevation: 0,
                             shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(50.0)),
+                                borderRadius:
+                                    BorderRadius.circular(cons.borderRadius)),
                           ),
                         ),
                       ),

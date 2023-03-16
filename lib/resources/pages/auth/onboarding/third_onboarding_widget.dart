@@ -120,7 +120,7 @@ class _ThirdOnboardingState extends State<ThirdOnboarding> {
                       backgroundColor: Colors.white,
                       elevation: 0,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30.0),
+                        borderRadius: BorderRadius.circular(cons.borderRadius),
                       ),
                     ),
                     onPressed: () => Navigator.of(context)

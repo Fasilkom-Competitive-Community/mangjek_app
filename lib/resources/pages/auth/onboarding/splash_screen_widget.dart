@@ -66,7 +66,7 @@ class _LogoState extends State<Logo> with TickerProviderStateMixin {
     FirebaseAuth _auth = FirebaseAuth.instance;
     String uid = _auth.currentUser!.uid.toString();
     String? token = await _auth.currentUser!.getIdToken();
-    String url = "https://mangjek.nabiel.my.id/api/v1/users/" + uid;
+    String url = "api/v1/users/" + uid;
 
     final response = await http.get(
       Uri.parse(url),
