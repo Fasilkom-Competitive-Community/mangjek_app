@@ -3,21 +3,43 @@ import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:mangjek_app/app/extensions/string.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:mangjek_app/app/bloc/home/profile/profile_cubit.dart';
+import 'package:mangjek_app/app/controllers/controller.dart';
+import 'package:mangjek_app/app/extensions/string.dart';
+import 'package:mangjek_app/app/networking/profile_service.dart';
+import 'package:mangjek_app/app/models/user.dart' as user_model;
+import 'package:mangjek_app/bootstrap/helpers.dart';
 import 'package:nylo_framework/nylo_framework.dart';
 
-class ProfileUserPage extends StatefulWidget {
-  const ProfileUserPage({super.key});
+class ProfileUserPage extends NyStatefulWidget {
+  ProfileUserPage({super.key});
+
+  final Controller controller = Controller();
 
   @override
   State<ProfileUserPage> createState() => _ProfileUserState();
 }
 
-class _ProfileUserState extends State<ProfileUserPage> {
+class _ProfileUserState extends NyState<ProfileUserPage> {
   File? image;
   final ImagePicker _picker = ImagePicker();
   final User? user = FirebaseAuth.instance.currentUser;
+
+  user_model.User? currentLoggedInUser;
+  late ProfileCubit _profileCubit;
+
+  @override
+  init() async {
+    super.init();
+    _profileCubit = context.read<ProfileCubit>()..fetchCurrentProfile();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
 
   Future getImage() async {
     final XFile? imagePicked =
@@ -136,7 +158,7 @@ class _ProfileUserState extends State<ProfileUserPage> {
     );
   }
 
-  Widget __createFormEdit(String label, String labelIcon,
+  Widget __createFormEdit(String label, String value, String labelIcon,
       {onlyNumber = false}) {
     return Container(
         margin: EdgeInsets.only(top: 11),
@@ -149,11 +171,16 @@ class _ProfileUserState extends State<ProfileUserPage> {
             ),
             Container(
               margin: EdgeInsets.only(top: 10),
-              child: TextField(
+              child: TextFormField(
+                initialValue: value,
                 keyboardType:
                     onlyNumber ? TextInputType.number : TextInputType.text,
-                style: TextStyle(fontSize: 14),
+                style: TextStyle(
+                  fontSize: 14,
+                ),
+                enabled: false,
                 decoration: InputDecoration(
+                  enabled: false,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(30.0),
                   ),
@@ -177,14 +204,52 @@ class _ProfileUserState extends State<ProfileUserPage> {
     return Container(
       margin: EdgeInsets.only(top: 10),
       padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-      child: Column(children: [
-        __createFormEdit('Nama Lengkap', 'profile-circle.png'),
-        __createFormEdit('NIM', 'nim-icon.png', onlyNumber: true),
-        __createFormEdit('Fakultas', 'jurusan-icon.png'),
-        __createFormEdit('Jurusan', 'jurusan-icon.png'),
-        __createFormEdit('Angkatan', 'angkatan-icon.png'),
-        __createFormEdit('Alamat Tempat Tinggal', 'alamat-icon.png'),
-      ]),
+      child: BlocBuilder<ProfileCubit, ProfileState>(
+        builder: (context, state) {
+          log("test here state : ${state}");
+          if (state is ProfileLoaded) {
+            return Column(children: [
+              __createFormEdit(
+                'Nama Lengkap',
+                state.user.name,
+                'profile-circle.png',
+              ),
+              __createFormEdit(
+                'NIM',
+                state.user.nim,
+                'nim-icon.png',
+                onlyNumber: true,
+              ),
+              __createFormEdit(
+                  'Fakultas',
+                  // state.user.fakultas,
+                  'Fasilkom',
+                  'jurusan-icon.png'),
+              __createFormEdit(
+                  'Jurusan',
+                  // state.user.jurusan,
+                  'Teknik Informatika',
+                  'jurusan-icon.png'),
+              __createFormEdit(
+                  'Angkatan',
+                  // state.user.angkatan,
+                  '2020',
+                  'angkatan-icon.png'),
+              __createFormEdit(
+                  'Alamat Tempat Tinggal',
+                  // state.user.alamat,
+                  'Indralaya',
+                  'alamat-icon.png'),
+            ]);
+          }
+
+          return Container(
+            child: Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
+        },
+      ),
     );
   }
 

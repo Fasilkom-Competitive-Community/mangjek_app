@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:mangjek_app/resources/pages/menu/constant.dart';
 import 'package:mangjek_app/resources/pages/menu/widgets/info_lainnya_widget.dart';
