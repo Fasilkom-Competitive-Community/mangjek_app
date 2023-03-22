@@ -1,0 +1,4 @@
+enum ChooseLocationType {
+  TitikJemput,
+  TitikTujuan,
+}

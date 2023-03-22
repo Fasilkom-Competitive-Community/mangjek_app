@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mangjek_app/app/singleton/media_query.dart';
 import 'package:mangjek_app/resources/pages/home/home_page.dart';
 import 'package:mangjek_app/resources/pages/orders/choose_from_map/choose_from_map_page.dart';
+import 'package:mangjek_app/resources/pages/orders/choose_location/choose_location.dart';
 import 'package:mangjek_app/resources/pages/profile/profile_page.dart';
 import 'package:mangjek_app/routes/constant.dart';
 import 'package:nylo_framework/nylo_framework.dart';
@@ -53,7 +54,7 @@ appRouter() => nyRoutes((router) {
 
       // order routes
       router.route(
-        ROUTE_ORDERS_CHOOSE_FROM_MAP_PAGE,
-        (context) => ChooseFromMapPage(),
+        ROUTE_ORDERS_CHOOSE_LOCATION,
+        (context) => ChooseLocation(),
       );
     });

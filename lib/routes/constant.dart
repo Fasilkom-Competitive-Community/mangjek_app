@@ -4,3 +4,4 @@ const ROUTE_MENU_PAGE = "/menu";
 const ROUTE_PROFILE_PAGE = "/profile";
 
 const ROUTE_ORDERS_CHOOSE_FROM_MAP_PAGE = "/choose-from-map";
+const ROUTE_ORDERS_CHOOSE_LOCATION = "/choose-location";

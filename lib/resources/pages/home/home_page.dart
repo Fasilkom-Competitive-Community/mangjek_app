@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:location/location.dart';
-import 'package:mangjek_app/app/bloc/home/map_camera/map_camera_cubit.dart';
 import 'package:mangjek_app/app/bloc/tab_navigation/tab_navigation_cubit.dart';
 import 'package:mangjek_app/app/singleton/location_plugin.dart';
 import 'package:mangjek_app/resources/pages/home/home_page_inner.dart';

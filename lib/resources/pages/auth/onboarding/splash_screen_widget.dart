@@ -1,12 +1,13 @@
 import 'dart:async';
-import 'dart:developer';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:http/http.dart' as http;
-import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:mangjek_app/app/networking/profile_service.dart';
 import 'package:mangjek_app/routes/constant.dart';
+import 'package:mangjek_app/bootstrap/helpers.dart';
 
 import '../../../../app/extensions/constructor.dart' as cons;
 
@@ -66,14 +67,8 @@ class _LogoState extends State<Logo> with TickerProviderStateMixin {
     FirebaseAuth _auth = FirebaseAuth.instance;
     String uid = _auth.currentUser!.uid.toString();
     String? token = await _auth.currentUser!.getIdToken();
-    String url = "api/v1/users/" + uid;
-
-    final response = await http.get(
-      Uri.parse(url),
-      headers: {
-        HttpHeaders.authorizationHeader: "Bearer " + token,
-      },
-    );
+    
+    final response = await api<ProfileService>((req) => req.fetchProfile(uid, token));
     var responseData = jsonDecode(response.body);
     setState(() {
       validasi = response.statusCode.toString();
