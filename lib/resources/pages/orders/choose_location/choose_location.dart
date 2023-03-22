@@ -10,6 +10,7 @@ import 'package:mangjek_app/app/extensions/string.dart';
 import 'package:mangjek_app/app/singleton/media_query.dart';
 import 'package:mangjek_app/resources/widgets/input_location_widget.dart';
 import 'package:mangjek_app/resources/widgets/pile_button_widget.dart';
+import 'package:mangjek_app/routes/constant.dart';
 import 'package:nylo_framework/nylo_framework.dart';
 import 'package:sizer/sizer.dart';
 
@@ -93,6 +94,9 @@ class _ChooseLocationState extends NyState<ChooseLocation> {
   List<String> suggestedLocaton = [
     "Fasilkom, Indralaya",
     "FKIP, Indralaya",
+    "FKIP, Indralaya",
+    "FKIP, Indralaya",
+    "FKIP, Indralaya",
   ];
 
   Widget _buildChooseLocation() {
@@ -121,7 +125,9 @@ class _ChooseLocationState extends NyState<ChooseLocation> {
               PileButtonWidget(
                 iconLocation: "maps.png",
                 label: "Pilih dari maps",
-                onTap: () {},
+                onTap: () {
+                  routeTo(ROUTE_ORDERS_CHOOSE_FROM_MAP_PAGE, data: true);
+                },
               ),
             ],
           ),
@@ -183,14 +189,17 @@ class _ChooseLocationState extends NyState<ChooseLocation> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       body: SafeArea(
-        child: Stack(
-          children: [
-            // build map here
-            _buildMap(),
-            // build widget on top map here
-            _buildWidgetOnTopOfMap(),
-          ],
+        child: Container(
+          child: Stack(
+            children: [
+              // build map here
+              _buildMap(),
+              // build widget on top map here
+              _buildWidgetOnTopOfMap(),
+            ],
+          ),
         ),
       ),
     );

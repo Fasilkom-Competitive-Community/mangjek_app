@@ -57,4 +57,9 @@ appRouter() => nyRoutes((router) {
         ROUTE_ORDERS_CHOOSE_LOCATION,
         (context) => ChooseLocation(),
       );
+
+      router.route(
+        ROUTE_ORDERS_CHOOSE_FROM_MAP_PAGE,
+        (context) => ChooseFromMapPage(),
+      );
     });
