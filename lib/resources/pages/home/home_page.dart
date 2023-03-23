@@ -9,6 +9,7 @@ import 'package:mangjek_app/app/singleton/location_plugin.dart';
 import 'package:mangjek_app/resources/pages/home/home_page_inner.dart';
 import 'package:mangjek_app/resources/pages/menu/menu_page.dart';
 import 'package:mangjek_app/resources/widgets/tab_navigation_widget.dart';
+import 'package:mangjek_app/resources/pages/riwayat/riwayat_widget.dart';
 import 'package:nylo_framework/nylo_framework.dart';
 
 class HomePage extends NyStatefulWidget {
@@ -91,7 +92,7 @@ class _HomePageState extends NyState<HomePage> {
 
   final Map<int, Widget> mapPageNavigation = {
     0: HomePageInner(),
-    1: Container(),
+    1: HistoryPage(),
     2: MenuPage(),
   };
 

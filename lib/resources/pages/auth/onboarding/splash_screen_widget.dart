@@ -64,17 +64,20 @@ class _LogoState extends State<Logo> with TickerProviderStateMixin {
   }
 
   Future _getReq() async {
-    FirebaseAuth _auth = FirebaseAuth.instance;
-    String uid = _auth.currentUser!.uid.toString();
-    String? token = await _auth.currentUser!.getIdToken();
-    
-    final response = await api<ProfileService>((req) => req.fetchProfile(uid, token));
-    var responseData = jsonDecode(response.body);
-    setState(() {
-      validasi = response.statusCode.toString();
-    });
-    _startPage(validasi);
-    return responseData;
+    try {
+      FirebaseAuth _auth = FirebaseAuth.instance;
+      String uid = _auth.currentUser!.uid.toString();
+      String? token = await _auth.currentUser!.getIdToken();
+
+      final response =
+          await api<ProfileService>((req) => req.fetchProfile(uid, token));
+      var responseData = jsonDecode(response.body);
+      setState(() {
+        validasi = response.statusCode.toString();
+      });
+      _startPage(validasi);
+      return responseData;
+    } catch (err) {}
   }
 
   void _startPage(String validasi) {
