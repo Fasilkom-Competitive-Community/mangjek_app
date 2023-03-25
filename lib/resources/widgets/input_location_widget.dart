@@ -4,12 +4,24 @@ import 'package:nylo_framework/nylo_framework.dart';
 class InputLocationWidget extends StatelessWidget {
   final void Function() onTapTujuan;
   final void Function() onTapJemput;
+  final void Function(String val) onChangeJemput;
+  final void Function(String val) onChangeTujuan;
+  final FocusNode? focusNodeTitikJemput;
+  final FocusNode? focusNodeTitikTujuan;
+  final TextEditingController? textControllerTitikJemput;
+  final TextEditingController? textControllerTitikTujuan;
 
   const InputLocationWidget({
     super.key,
     required this.context,
+    required this.onChangeJemput,
+    required this.onChangeTujuan,
     required this.onTapJemput,
     required this.onTapTujuan,
+    this.focusNodeTitikJemput,
+    this.focusNodeTitikTujuan,
+    this.textControllerTitikJemput,
+    this.textControllerTitikTujuan,
   });
 
   final BuildContext context;
@@ -45,6 +57,9 @@ class InputLocationWidget extends StatelessWidget {
             Container(
               child: TextField(
                 onTap: onTapJemput,
+                controller: this.textControllerTitikJemput,
+                onChanged: (value) => onChangeJemput(value),
+                focusNode: focusNodeTitikJemput,
                 decoration: InputDecoration(
                   contentPadding: EdgeInsets.symmetric(vertical: 10),
                   border: OutlineInputBorder(
@@ -67,6 +82,9 @@ class InputLocationWidget extends StatelessWidget {
             Container(
               child: TextField(
                 onTap: onTapTujuan,
+                onChanged: (value) => onChangeTujuan(value),
+                focusNode: focusNodeTitikTujuan,
+                controller: this.textControllerTitikTujuan,
                 decoration: InputDecoration(
                   contentPadding: EdgeInsets.symmetric(vertical: 10),
                   border: OutlineInputBorder(

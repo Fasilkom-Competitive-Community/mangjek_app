@@ -15,6 +15,17 @@ class SelectLocationCubit extends Cubit<SelectLocationState> {
   // 1 => titik tujuan focused
   int lastIndexFocused = 0;
 
+  String? titikJemput;
+  String? titikTujuan;
+
+  void setLocTitikJemput(String lokasi) {
+    titikJemput = lokasi;
+  }
+
+  void setLocTitikTujuan(String lokasi) {
+    titikTujuan = lokasi;
+  }
+
   void setLastIndexFocused(int newIndex) {
     lastIndexFocused = newIndex;
   }

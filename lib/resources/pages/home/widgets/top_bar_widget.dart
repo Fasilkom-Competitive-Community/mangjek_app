@@ -43,6 +43,8 @@ class _TopBarHomeWidgetState extends State<TopBarHomeWidget> {
           child: Container(
             child: InputLocationWidget(
               context: context,
+              onChangeJemput: (val) => {},
+              onChangeTujuan: (val) => {},
               onTapJemput: onTapInputLocation(ChooseLocationType.TitikJemput),
               onTapTujuan: onTapInputLocation(ChooseLocationType.TitikTujuan),
             ),
