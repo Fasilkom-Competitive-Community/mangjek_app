@@ -4,6 +4,8 @@ import 'package:mangjek_app/resources/pages/home/widgets/top_bar_widget.dart';
 import 'package:nylo_framework/nylo_framework.dart';
 import 'package:sizer/sizer.dart';
 
+import '../../../routes/constant.dart';
+
 class HomePageInner extends StatefulWidget {
   const HomePageInner({super.key});
 
@@ -146,7 +148,7 @@ class _HomePageInnerState extends State<HomePageInner> {
                   ),
                   backgroundColor: MaterialStatePropertyAll(Color(0xFFF3C703))),
               child: const Text("Pesan Sekarang"),
-              onPressed: (() => context),
+              onPressed: (() => routeTo(ROUTE_ORDER_DETAILS_PAGE)),
             ),
           )
         ],
