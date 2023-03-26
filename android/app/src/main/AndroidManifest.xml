@@ -48,4 +48,6 @@
 
     <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyDIcTGa61FUTuSvoN1W5oRaLlF3K-Bfbmo" />
   </application>
+
+  <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 </manifest>

@@ -1,9 +1,6 @@
-import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:mangjek_app/app/bloc/home/select_location/select_location_cubit.dart';
@@ -12,17 +9,14 @@ import 'package:mangjek_app/app/constants/choose_location.dart';
 import 'package:mangjek_app/app/controllers/controller.dart';
 import 'package:mangjek_app/app/extensions/string.dart';
 import 'package:mangjek_app/app/networking/gmaps_service.dart';
-import 'package:mangjek_app/app/singleton/location_plugin.dart';
 import 'package:mangjek_app/app/singleton/media_query.dart';
+import 'package:mangjek_app/app/utils/debouncer.dart';
 import 'package:mangjek_app/bootstrap/helpers.dart';
+import 'package:mangjek_app/resources/pages/orders/choose_location/widgets/order_inquiry_widget.dart';
 import 'package:mangjek_app/resources/widgets/input_location_widget.dart';
 import 'package:mangjek_app/resources/widgets/pile_button_widget.dart';
 import 'package:nylo_framework/nylo_framework.dart';
-import 'package:http/http.dart' as http;
 import 'package:sizer/sizer.dart';
-
-import 'package:location/location.dart';
-import 'package:mangjek_app/app/utils/debouncer.dart';
 
 class ChooseLocation extends NyStatefulWidget {
   ChooseLocation({super.key});
@@ -61,6 +55,8 @@ class _ChooseLocationState extends NyState<ChooseLocation> {
     return titikTujuanFocusNode.hasFocus;
   }
 
+  bool showOrderInquiry = false;
+
   Future<List<dynamic>> _getSuggestion(String input) async {
     final response =
         await api<GmapService>((req) => req.fetchSuggestionData(input));
@@ -78,42 +74,81 @@ class _ChooseLocationState extends NyState<ChooseLocation> {
   }
 
   void _onTextChangeJemput(String value) {
-    onTextChangeJemput.run(() async {
-      lokasiSuggestions = await _getSuggestion(value);
-      setState(() {});
+    _orderCubit.titikJemput = null;
+    _orderCubit.namaLokasiJemput = "";
+    setState(() {
+      showOrderInquiry = false;
+      onTextChangeJemput.run(() async {
+        lokasiSuggestions = await _getSuggestion(value);
+      });
     });
   }
 
   void _onTextChangeTujuan(String value) {
-    onTextChangeTujuan.run(() async {
-      lokasiSuggestions = await _getSuggestion(value);
-      setState(() {});
+    _orderCubit.titikTujuan = null;
+    _orderCubit.namaLokasiTujuan = "";
+    setState(() {
+      showOrderInquiry = false;
+      onTextChangeTujuan.run(() async {
+        lokasiSuggestions = await _getSuggestion(value);
+      });
     });
   }
 
-  void _onTapLokasiSaatIni() {
-    selectLocationCubit.lastIndexFocused == 0
-        ? selectLocationCubit.setLocTitikJemput(lokasi)
-        : selectLocationCubit.setLocTitikTujuan(lokasi);
+  void hideSuggestionsIfOriginAndDestinationFilled() {
+    if (_orderCubit.titikJemput != null && _orderCubit.titikTujuan != null) {
+      setState(() {
+        lokasiSuggestions = [];
+        showOrderInquiry = true;
+        titikJemputFocusNode.unfocus();
+        titikTujuanFocusNode.unfocus();
+      });
+    }
   }
 
   void _onTapSuggestion(String id, String nama) async {
-    LatLng titikLokasi = await _getLatLangFromMapId(id);
     if (isFocusOnTitikJemput()) {
+      controllerInputTitikJemput.text = nama;
+
+      LatLng titikLokasi = await _getLatLangFromMapId(id);
       _orderCubit.titikJemput = titikLokasi;
       _orderCubit.setNamaLokasiJemput(nama);
-      controllerInputTitikJemput.text = nama;
+      hideSuggestionsIfOriginAndDestinationFilled();
     }
+
     if (isFocusOnTitikTujuan()) {
+      controllerInputTitikTujuan.text = nama;
+
+      LatLng titikLokasi = await _getLatLangFromMapId(id);
       _orderCubit.titikTujuan = titikLokasi;
       _orderCubit.setNamaLokasiTujuan(nama);
-      controllerInputTitikTujuan.text = nama;
+      hideSuggestionsIfOriginAndDestinationFilled();
     }
   }
 
   @override
   init() {
     prevClickOnType = widget.data() as ChooseLocationType;
+    titikJemputFocusNode.addListener(() {
+      if (titikJemputFocusNode.hasFocus) {
+        setState(() {
+          if (showOrderInquiry) {
+            showOrderInquiry = false;
+          }
+          lokasiSuggestions = [];
+        });
+      }
+    });
+    titikTujuanFocusNode.addListener(() {
+      if (titikTujuanFocusNode.hasFocus) {
+        setState(() {
+          if (showOrderInquiry) {
+            showOrderInquiry = false;
+          }
+          lokasiSuggestions = [];
+        });
+      }
+    });
     return super.init();
   }
 
@@ -171,7 +206,6 @@ class _ChooseLocationState extends NyState<ChooseLocation> {
             child: Wrap(
               children: [
                 InputLocationWidget(
-                  context: context,
                   onChangeJemput: (val) => _onTextChangeJemput(val),
                   onChangeTujuan: (val) => _onTextChangeTujuan(val),
                   onTapJemput: () {},
@@ -190,80 +224,84 @@ class _ChooseLocationState extends NyState<ChooseLocation> {
   }
 
   Widget _buildChooseLocation() {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.all(Radius.circular(20)),
-      ),
-      padding: EdgeInsets.symmetric(
-        vertical: 20,
-        horizontal: 6.w,
-      ),
-      child: Column(
-        children: [
-          // build  choose from current location and from map
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              PileButtonWidget(
-                iconLocation: "choose_location.png",
-                label: "Lokasi saat ini",
-                onTap: () {
-                  log("test");
-                },
-              ),
-              PileButtonWidget(
-                iconLocation: "maps.png",
-                label: "Pilih dari maps",
-                onTap: () {},
-              ),
-            ],
-          ),
-          SizedBox(
-            height: 2.h,
-          ),
-          // build suggested location list
-          Container(
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
+    return Visibility(
+      visible: !showOrderInquiry,
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.all(Radius.circular(20)),
+        ),
+        padding: EdgeInsets.symmetric(
+          vertical: 20,
+          horizontal: 6.w,
+        ),
+        child: Column(
+          children: [
+            // build  choose from current location and from map
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                for (var i = 0; i < lokasiSuggestions.length; i++)
-                  Container(
-                      width: MediaQuerySingleton.screenSize.width,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 20,
-                        vertical: 12,
-                      ),
-                      decoration: BoxDecoration(
-                        border: i == 0
-                            ? Border(
-                                top: BorderSide(
-                                  color: "#D4D8D6".toColor(),
-                                ),
-                                bottom: BorderSide(
-                                  color: "#D4D8D6".toColor(),
-                                ),
-                              )
-                            : Border(
-                                bottom: BorderSide(
-                                  color: "#D4D8D6".toColor(),
-                                ),
-                              ),
-                      ),
-                      child: GestureDetector(
-                        onTap: () => {
-                          _onTapSuggestion(
-                              lokasiSuggestions[i]['place_id'].toString(),
-                              lokasiSuggestions[i]['structured_formatting']
-                                  ['main_text'])
-                        },
-                        child: Text(lokasiSuggestions[i]
-                            ['structured_formatting']['main_text']),
-                      ))
+                PileButtonWidget(
+                  iconLocation: "choose_location.png",
+                  label: "Lokasi saat ini",
+                  onTap: () {
+                    log("test");
+                  },
+                ),
+                PileButtonWidget(
+                  iconLocation: "maps.png",
+                  label: "Pilih dari maps",
+                  onTap: () {},
+                ),
               ],
             ),
-          )
-        ],
+            if (lokasiSuggestions.length > 0)
+              SizedBox(
+                height: 2.h,
+              ),
+            // build suggested location list
+            Container(
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  for (var i = 0; i < lokasiSuggestions.length; i++)
+                    Container(
+                        width: MediaQuerySingleton.screenSize.width,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 20,
+                          vertical: 12,
+                        ),
+                        decoration: BoxDecoration(
+                          border: i == 0
+                              ? Border(
+                                  top: BorderSide(
+                                    color: "#D4D8D6".toColor(),
+                                  ),
+                                  bottom: BorderSide(
+                                    color: "#D4D8D6".toColor(),
+                                  ),
+                                )
+                              : Border(
+                                  bottom: BorderSide(
+                                    color: "#D4D8D6".toColor(),
+                                  ),
+                                ),
+                        ),
+                        child: GestureDetector(
+                          onTap: () => {
+                            _onTapSuggestion(
+                                lokasiSuggestions[i]['place_id'].toString(),
+                                lokasiSuggestions[i]['structured_formatting']
+                                    ['main_text'])
+                          },
+                          child: Text(lokasiSuggestions[i]
+                              ['structured_formatting']['main_text']),
+                        ))
+                ],
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
@@ -295,6 +333,16 @@ class _ChooseLocationState extends NyState<ChooseLocation> {
             _buildMap(),
             // build widget on top map here
             _buildWidgetOnTopOfMap(),
+
+            Visibility(
+              visible: showOrderInquiry,
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child: OrderInquiryWidget(
+                  orderCubit: _orderCubit,
+                ),
+              ),
+            )
           ],
         ),
       ),

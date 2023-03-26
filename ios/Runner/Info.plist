@@ -46,5 +46,9 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>For payment using QR Code, we need permissions to view QR code for payment usage</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>For payment using QR Code, we need permissions to save QR code into your device gallery</string>
 </dict>
 </plist>

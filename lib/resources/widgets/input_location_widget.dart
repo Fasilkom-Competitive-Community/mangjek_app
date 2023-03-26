@@ -10,10 +10,10 @@ class InputLocationWidget extends StatelessWidget {
   final FocusNode? focusNodeTitikTujuan;
   final TextEditingController? textControllerTitikJemput;
   final TextEditingController? textControllerTitikTujuan;
+  final bool isEnabled;
 
   const InputLocationWidget({
     super.key,
-    required this.context,
     required this.onChangeJemput,
     required this.onChangeTujuan,
     required this.onTapJemput,
@@ -22,9 +22,8 @@ class InputLocationWidget extends StatelessWidget {
     this.focusNodeTitikTujuan,
     this.textControllerTitikJemput,
     this.textControllerTitikTujuan,
+    this.isEnabled = true,
   });
-
-  final BuildContext context;
 
   @override
   Widget build(BuildContext context) {
@@ -56,6 +55,7 @@ class InputLocationWidget extends StatelessWidget {
           children: [
             Container(
               child: TextField(
+                enabled: this.isEnabled,
                 onTap: onTapJemput,
                 controller: this.textControllerTitikJemput,
                 onChanged: (value) => onChangeJemput(value),
@@ -81,6 +81,7 @@ class InputLocationWidget extends StatelessWidget {
             ),
             Container(
               child: TextField(
+                enabled: this.isEnabled,
                 onTap: onTapTujuan,
                 onChanged: (value) => onChangeTujuan(value),
                 focusNode: focusNodeTitikTujuan,
