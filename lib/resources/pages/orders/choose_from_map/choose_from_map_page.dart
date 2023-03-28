@@ -1,19 +1,23 @@
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:mangjek_app/app/bloc/globals/init.dart';
+import 'package:location/location.dart';
+import 'package:mangjek_app/app/extensions/constructor.dart' as cons;
 import 'package:mangjek_app/app/bloc/home/map/map_cubit.dart';
 import 'package:mangjek_app/app/bloc/home/map_camera/map_camera_cubit.dart';
 import 'package:mangjek_app/app/bloc/home/select_location/select_location_cubit.dart';
 import 'package:mangjek_app/app/controllers/controller.dart';
 import 'package:mangjek_app/app/singleton/media_query.dart';
 import 'package:mangjek_app/app/utils/debouncer.dart';
+import 'package:mangjek_app/app/singleton/location_plugin.dart';
+import 'package:mangjek_app/routes/constant.dart';
 import 'package:nylo_framework/nylo_framework.dart';
 import 'package:sizer/sizer.dart';
+import 'package:geocoder2/geocoder2.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ChooseFromMapPage extends NyStatefulWidget {
   final Controller controller = Controller();
@@ -29,6 +33,50 @@ class _ChooseFromMapPageState extends NyState<ChooseFromMapPage> {
   late MapCubit _mapCubit;
   late MapCameraCubit _mapCameraCubit;
   late bool isTitikJemput;
+  late double lat, long;
+  Object dataValueJemput = {};
+  Object dataValueTujuan = {};
+  String userLocation = '';
+  bool appearLoading = true, appearScreen = false;
+
+  late LatLng centerMarkerLocation;
+  Debouncer onMapCameraMoveDebouncer = Debouncer(milliseconds: 200);
+
+  Future<void> getUserCurrentLocation() async {
+    Location location = LocationPluginSingleton.getLocationPlugin();
+    try {
+      await location.getLocation().then((value) {
+        setState(() {
+          lat = value.latitude!;
+          long = value.longitude!;
+          centerMarkerLocation = LatLng(lat, long);
+          appearScreen = true;
+        });
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<void> getAddressFromCenterMarker() async {
+    try {
+      GeoData data = await Geocoder2.getDataFromCoordinates(
+          latitude: centerMarkerLocation.latitude,
+          longitude: centerMarkerLocation.longitude,
+          googleMapApiKey: "AIzaSyDIcTGa61FUTuSvoN1W5oRaLlF3K-Bfbmo");
+      setState(() {
+        userLocation = data.address;
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getUserCurrentLocation();
+  }
 
   @override
   init() async {
@@ -37,15 +85,16 @@ class _ChooseFromMapPageState extends NyState<ChooseFromMapPage> {
     isTitikJemput = widget.data();
   }
 
-  LatLng centerMarkerLocation = LatLng(-3.2189977434045636, 104.65166153632049);
-
-  Debouncer onMapCameraMoveDebouncer = Debouncer(milliseconds: 200);
-
   final Completer<GoogleMapController> _mapCompleterController =
       Completer<GoogleMapController>();
   GoogleMapController? _mapController;
 
   void _onCameraMove(CameraPosition cameraPosition) {
+    setState(() {
+      lat = cameraPosition.target.latitude;
+      long = cameraPosition.target.longitude;
+      appearLoading = true;
+    });
     onMapCameraMoveDebouncer.run(() {
       _mapCameraCubit.stopCamera();
       _mapCubit.setCurrentMarkerPosition(cameraPosition.target);
@@ -55,7 +104,6 @@ class _ChooseFromMapPageState extends NyState<ChooseFromMapPage> {
   void _onMapCreated(GoogleMapController controller) {
     _mapCompleterController.complete(controller);
     _mapController = controller;
-
     _mapCubit.mapIsReady(centerMarkerLocation);
     _mapCubit.moveToCurrentLocation(true, false);
   }
@@ -78,9 +126,14 @@ class _ChooseFromMapPageState extends NyState<ChooseFromMapPage> {
       mapToolbarEnabled: false,
       onTap: (loc) {},
       onCameraIdle: () {
-        print('Camera Iddle');
+        Future.delayed(Duration(seconds: 3), () {
+          setState(() {
+            centerMarkerLocation = LatLng(lat, long);
+            getAddressFromCenterMarker();
+            appearLoading = false;
+          });
+        });
       },
-      polylines: {},
       // markers: mapMarkers.values.toSet(),
     );
   }
@@ -90,70 +143,124 @@ class _ChooseFromMapPageState extends NyState<ChooseFromMapPage> {
     _selectLocationCubit = context.read<SelectLocationCubit>();
     _mapCubit = context.read<MapCubit>();
     _mapCameraCubit = context.read<MapCameraCubit>();
-
     return SafeArea(
       child: Scaffold(
-        body: Stack(
-          children: [
-            // map
-            _buildMap(),
-
-            // center map marker
-            Align(
-              alignment: Alignment.center,
-              child: Image.asset(
-                getImageAsset("choose_location.png"),
-                height: 45,
-                width: 45,
-                scale: 1.6,
-              ),
-            ),
-
-            // app bar
-            Align(
-              alignment: Alignment.topLeft,
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(18),
-                    bottomRight: Radius.circular(18),
+        body: (appearScreen)
+            ? Stack(
+                children: [
+                  // map
+                  _buildMap(),
+                  // center map marker
+                  Align(
+                    alignment: Alignment.center,
+                    child: Image.asset(
+                      cons.assetsChooseLocation,
+                      height: 45,
+                      width: 45,
+                      scale: 1.6,
+                    ),
                   ),
-                ),
-                height: 8.h,
-                child: Container(
-                  alignment: Alignment.centerLeft,
-                  width: MediaQuerySingleton.screenSize.width,
-                  child: IconButton(
-                    onPressed: () {
-                      pop();
-                    },
-                    icon: Icon(Icons.arrow_back),
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: cons.colorBackgroundSplashTwo,
+                        borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(18),
+                          bottomRight: Radius.circular(18),
+                        ),
+                      ),
+                      height: 8.h,
+                      child: Container(
+                        alignment: Alignment.centerLeft,
+                        width: MediaQuerySingleton.screenSize.width,
+                        child: IconButton(
+                          onPressed: () {
+                            pop();
+                          },
+                          icon: Icon(Icons.arrow_back),
+                        ),
+                      ),
+                    ),
                   ),
+
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child:
+                        BlocBuilder<SelectLocationCubit, SelectLocationState>(
+                            builder: (context, state) {
+                      return showChooseLocationBottomWidget();
+                    }),
+                  ),
+                ],
+              )
+            : Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                          cons.colorBackgroundSplashTwo),
+                      backgroundColor: Colors.grey[300],
+                      strokeWidth: 6,
+                    ),
+                    SizedBox(height: 15),
+                    Container(
+                      margin: const EdgeInsets.symmetric(
+                          horizontal: cons.sizePadding),
+                      child: Text(
+                        "Kami sedang memproses Mapnya,\n mohon ditunggu sebentar yaa:)",
+                        style: TextStyle(fontSize: 15),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ),
-
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: BlocBuilder<SelectLocationCubit, SelectLocationState>(
-                  builder: (context, state) {
-                return showChooseLocationBottomWidget();
-              }),
-            ),
-          ],
-        ),
       ),
     );
   }
 
-  void _onPressLanjutkan() {
-    // move focus to next textfield
-    pop();
+  void _onPressLanjutkan() async {
+    final prefs = await SharedPreferences.getInstance();
+    if (!appearLoading) {
+      if (isTitikJemput) {
+        setState(() {
+          dataValueJemput = {
+            'latitude': lat,
+            'longtitude': long,
+            'address': userLocation
+          };
+        });
+        prefs.setString('dataJemput', dataValueJemput.toString());
+      } else {
+        setState(() {
+          dataValueTujuan = {
+            'latitude': lat,
+            'longtitude': long,
+            'address': userLocation
+          };
+        });
+        prefs.setString('dataTujuan', dataValueTujuan.toString());
+      }
+    }
+    print("Ini adalah datanya, Jemput : " +
+        prefs.getString('dataJemput')! +
+        " dan Tujuan " +
+        prefs.getString('dataTujuan')!);
+
+    if (prefs.getString('dataJemput')!.contains('latitude') &&
+        prefs.getString('dataTujuan')!.contains('latitude')) {
+      routeTo(ROUTE_HOME_PAGE);
+      prefs.setString('dataJemput', '');
+      prefs.setString('dataTujuan', '');
+    } else {
+      pop();
+    }
   }
 
   String getNamedSelectedLocation() {
-    return "Fasilkom, Indralaya";
+    return userLocation;
   }
 
   Widget showChooseLocationBottomWidget() {
@@ -199,12 +306,18 @@ class _ChooseFromMapPageState extends NyState<ChooseFromMapPage> {
                           left: 14,
                           bottom: 5,
                         ),
-                        child: Text(
-                          location,
-                          style: TextStyle(
-                            fontWeight: FontWeight.w900,
-                            fontSize: 16,
-                          ),
+                        child: Row(
+                          children: <Widget>[
+                            Expanded(
+                              child: Text(
+                                location,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w900,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                       Divider(
@@ -230,14 +343,21 @@ class _ChooseFromMapPageState extends NyState<ChooseFromMapPage> {
                             SizedBox(
                               width: 10,
                             ),
-                            Text(getNamedSelectedLocation()),
+                            Expanded(
+                              child: (!appearLoading)
+                                  ? Text(getNamedSelectedLocation())
+                                  : LinearProgressIndicator(
+                                      color: cons.colorBackgroundSplashTwo,
+                                      minHeight: 3,
+                                    ),
+                            ),
                           ],
                         ),
                       ),
                     ],
                   ),
                   SizedBox(
-                    height: 20,
+                    height: 8,
                   ),
                   Container(
                     height: 50,
@@ -245,11 +365,14 @@ class _ChooseFromMapPageState extends NyState<ChooseFromMapPage> {
                     child: ElevatedButton(
                       style: ButtonStyle(
                         backgroundColor: MaterialStateColor.resolveWith(
-                          (states) => Color(0xFFF3C703),
+                          (states) => (!appearLoading)
+                              ? Color(0xFFF3C703)
+                              : Color.fromARGB(255, 202, 202, 202),
                         ),
                         shape: MaterialStateProperty.all(
                           RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30),
+                            borderRadius:
+                                BorderRadius.circular(cons.borderRadius),
                           ),
                         ),
                         textStyle: MaterialStateTextStyle.resolveWith(

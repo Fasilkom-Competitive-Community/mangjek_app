@@ -1,8 +1,4 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:mangjek_app/app/constants/choose_location.dart';
 import 'package:mangjek_app/app/controllers/controller.dart';
@@ -119,14 +115,14 @@ class _ChooseLocationState extends NyState<ChooseLocation> {
                 iconLocation: "choose_location.png",
                 label: "Lokasi saat ini",
                 onTap: () {
-                  log("test");
+                  routeTo(ROUTE_ORDERS_CHOOSE_FROM_MAP_PAGE, data: true);
                 },
               ),
               PileButtonWidget(
                 iconLocation: "maps.png",
                 label: "Pilih dari maps",
                 onTap: () {
-                  routeTo(ROUTE_ORDERS_CHOOSE_FROM_MAP_PAGE, data: true);
+                  routeTo(ROUTE_ORDERS_CHOOSE_FROM_MAP_PAGE, data: false);
                 },
               ),
             ],

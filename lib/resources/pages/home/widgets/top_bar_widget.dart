@@ -1,8 +1,5 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:mangjek_app/app/constants/choose_location.dart';
-import 'package:mangjek_app/resources/pages/orders/choose_location/choose_location.dart';
 import 'package:mangjek_app/routes/constant.dart';
 import 'package:nylo_framework/nylo_framework.dart';
 import 'package:mangjek_app/resources/widgets/input_location_widget.dart';
@@ -47,7 +44,7 @@ class _TopBarHomeWidgetState extends State<TopBarHomeWidget> {
               onTapTujuan: onTapInputLocation(ChooseLocationType.TitikTujuan),
             ),
           ),
-        )
+        ),
       ],
     );
   }
@@ -108,9 +105,6 @@ class _TopBarHomeWidgetState extends State<TopBarHomeWidget> {
                   ],
                 ),
               ),
-              // Container(
-              //   height: 50,
-              // )
             ],
           ),
         ),
