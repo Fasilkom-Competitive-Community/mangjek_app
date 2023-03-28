@@ -251,6 +251,7 @@ class _ChooseFromMapPageState extends NyState<ChooseFromMapPage> {
 
     if (prefs.getString('dataJemput')!.contains('latitude') &&
         prefs.getString('dataTujuan')!.contains('latitude')) {
+      // Route Page Here
       routeTo(ROUTE_HOME_PAGE);
       prefs.setString('dataJemput', '');
       prefs.setString('dataTujuan', '');
