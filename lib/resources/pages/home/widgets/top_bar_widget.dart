@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:mangjek_app/app/constants/choose_location.dart';
 import 'package:mangjek_app/routes/constant.dart';
 import 'package:nylo_framework/nylo_framework.dart';
-import 'package:mangjek_app/resources/widgets/input_location_widget.dart';
 
 class TopBarHomeWidget extends StatefulWidget {
   const TopBarHomeWidget({super.key});
@@ -39,7 +38,7 @@ class _TopBarHomeWidgetState extends State<TopBarHomeWidget> {
           top: 70.0,
           child: Container(
             child: InputLocationWidget(
-              context: context,
+              isEnabled: false,
               onTapJemput: onTapInputLocation(ChooseLocationType.TitikJemput),
               onTapTujuan: onTapInputLocation(ChooseLocationType.TitikTujuan),
             ),
@@ -121,6 +120,103 @@ class _TopBarHomeWidgetState extends State<TopBarHomeWidget> {
         child: Stack(
           children: [
             buildTopBar(),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+
+class InputLocationWidget extends StatelessWidget {
+  final void Function() onTapTujuan;
+  final void Function() onTapJemput;
+  final bool isEnabled;
+
+  const InputLocationWidget({
+    super.key,
+    required this.onTapJemput,
+    required this.onTapTujuan,
+    this.isEnabled = true,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      padding: const EdgeInsets.symmetric(
+        horizontal: 20,
+      ),
+      color: const Color.fromRGBO(0, 0, 0, 0),
+      child: Container(
+        decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              color: Color.fromRGBO(0, 0, 0, 0.1),
+              spreadRadius: 4,
+              blurRadius: 21,
+            ),
+          ],
+          borderRadius: BorderRadius.all(
+            Radius.circular(18),
+          ),
+          color: Color(0xFFF7FCF9),
+        ),
+        padding: const EdgeInsets.symmetric(
+          horizontal: 5,
+          vertical: 7,
+        ),
+        child: Column(
+          children: [
+            GestureDetector(
+              onTap: this.onTapJemput,
+              child: Container(
+                child: TextField(
+                  enabled: this.isEnabled,
+                  onTap: onTapJemput,
+                  decoration: InputDecoration(
+                    contentPadding: EdgeInsets.symmetric(vertical: 10),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30.0),
+                    ),
+                    filled: true,
+                    hintStyle: TextStyle(color: Colors.grey[800]),
+                    prefixIcon: Image.asset(
+                      getImageAsset("titikJemput.png"),
+                      scale: 3.0,
+                    ),
+                    hintText: "Titik Jemput",
+                    fillColor: Colors.white70,
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            GestureDetector(
+              onTap: this.onTapTujuan,
+              child: Container(
+                child: TextField(
+                  enabled: this.isEnabled,
+                  onTap: onTapTujuan,
+                  decoration: InputDecoration(
+                    contentPadding: EdgeInsets.symmetric(vertical: 10),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30.0),
+                    ),
+                    filled: true,
+                    hintStyle: TextStyle(color: Colors.grey[800]),
+                    prefixIcon: Image.asset(
+                      getImageAsset("tujuan.png"),
+                      scale: 3.0,
+                    ),
+                    hintText: "Lokasi Tujuan",
+                    fillColor: Colors.white70,
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ),

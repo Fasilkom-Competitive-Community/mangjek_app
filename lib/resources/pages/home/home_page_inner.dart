@@ -12,9 +12,6 @@ class HomePageInner extends StatefulWidget {
 }
 
 class _HomePageInnerState extends State<HomePageInner> {
-  FocusNode focusNodeTitikJemput = FocusNode();
-  FocusNode focusNodeLokasiTujuan = FocusNode();
-
   Widget buildBottomWidget() {
     return Container(
       padding: const EdgeInsets.symmetric(
