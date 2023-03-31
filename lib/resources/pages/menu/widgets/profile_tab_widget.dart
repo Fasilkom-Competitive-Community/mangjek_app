@@ -5,8 +5,6 @@ import 'package:nylo_framework/nylo_framework.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mangjek_app/app/bloc/home/profile/profile_cubit.dart';
-import 'package:mangjek_app/app/controllers/controller.dart';
-import 'package:mangjek_app/app/networking/profile_service.dart';
 import 'package:mangjek_app/app/models/user.dart' as user_model;
 
 class ProfileTab extends StatefulWidget {

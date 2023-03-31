@@ -43,7 +43,7 @@ class _TopBarHomeWidgetState extends State<TopBarHomeWidget> {
               onTapTujuan: onTapInputLocation(ChooseLocationType.TitikTujuan),
             ),
           ),
-        )
+        ),
       ],
     );
   }
@@ -104,9 +104,6 @@ class _TopBarHomeWidgetState extends State<TopBarHomeWidget> {
                   ],
                 ),
               ),
-              // Container(
-              //   height: 50,
-              // )
             ],
           ),
         ),
