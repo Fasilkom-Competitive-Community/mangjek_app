@@ -145,7 +145,7 @@ class _HomePageInnerState extends State<HomePageInner> {
                   ),
                   backgroundColor: MaterialStatePropertyAll(Color(0xFFF3C703))),
               child: const Text("Pesan Sekarang"),
-              onPressed: (() => routeTo(ROUTE_ORDER_DETAILS_PAGE)),
+              onPressed: () {},
             ),
           )
         ],

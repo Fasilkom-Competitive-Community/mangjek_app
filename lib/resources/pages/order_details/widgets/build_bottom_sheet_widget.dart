@@ -84,7 +84,7 @@ class _BuildBottomSheetState extends State<BuildBottomSheet> {
                                             Text(
                                               "M. Farhan Ghifari",
                                               style: TextStyle(
-                                                  fontWeight: FontWeight.w500,
+                                                  fontWeight: FontWeight.w600,
                                                   fontSize: 12),
                                             ),
                                           ],
@@ -95,7 +95,7 @@ class _BuildBottomSheetState extends State<BuildBottomSheet> {
                                                 padding: EdgeInsets.symmetric(
                                                     horizontal: 5)),
                                             Text(
-                                              "Mahasiswa Teknik Informatika...",
+                                              "Mhs. Teknik Informatika - Fasi....",
                                               overflow: TextOverflow.ellipsis,
                                               style: TextStyle(
                                                   fontWeight: FontWeight.w400,
@@ -503,14 +503,21 @@ class _BuildBottomSheetState extends State<BuildBottomSheet> {
                   vertical: 10,
                 )),
                 SizedBox(
-                  width: 300.0,
+                  width: (MediaQuery.of(context).size.width) - 40,
                   height: 50.0,
                   child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        shape: StadiumBorder(),
-                        backgroundColor: '#F3C703'.toColor()),
-                    child: const Text("Batalkan pesanan?"),
-                    onPressed: (() => context),
+                    style: ButtonStyle(
+                        shape: MaterialStatePropertyAll(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(14),
+                          ),
+                        ),
+                        backgroundColor:
+                            MaterialStatePropertyAll(Color(0xFFF3C703))
+                        // backgroundColor: Color(0xFFF3C703),
+                        ),
+                    child: const Text("Batalkan Pesanan?"),
+                    onPressed: (() {}),
                   ),
                 ),
                 Padding(
@@ -541,11 +548,11 @@ class _BuildBottomSheetState extends State<BuildBottomSheet> {
   @override
   Widget build(BuildContext context) {
     return DraggableScrollableSheet(
-        initialChildSize: 0.37,
-        minChildSize: 0.37,
+        initialChildSize: 0.38,
+        minChildSize: 0.38,
         maxChildSize: 1.0,
         snap: true,
-        snapSizes: [0.37, 1.0],
+        snapSizes: [0.38, 1.0],
         builder: (BuildContext context, ScrollController scrollController) {
           return Container(
               decoration: BoxDecoration(
