@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mangjek_app/app/models/user.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';

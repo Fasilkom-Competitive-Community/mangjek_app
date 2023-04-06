@@ -387,7 +387,7 @@ class _LoginState extends State<Login> {
           14,
           120);
     } on FirebaseAuthException catch (e) {
-      return;
+      print(e);
     }
   }
 }

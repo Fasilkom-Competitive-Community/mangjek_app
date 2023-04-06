@@ -23,6 +23,7 @@ const assetsImgSecondSplashScreen = "public/assets/images/safety.svg";
 const assetsImgThirdSpashScreen = "public/assets/images/sapiens_1.png";
 const assetsImgBikeLogo = "public/assets/images/bike_logo.svg";
 const assetsImgOTW = "public/assets/images/OTW.png";
+const assetsChooseLocation = "public/assets/images/koor.png";
 const assetsImgLogoSikuning = "public/assets/images/logo_sikuning.png";
 const assetsImgTrashBin = "public/assets/images/trash_bin.svg";
 const assetsImgMotor = "public/assets/images/motor_logo.svg";
