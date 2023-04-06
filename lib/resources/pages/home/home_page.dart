@@ -12,6 +12,8 @@ import 'package:mangjek_app/resources/widgets/tab_navigation_widget.dart';
 import 'package:mangjek_app/resources/pages/riwayat/riwayat_widget.dart';
 import 'package:nylo_framework/nylo_framework.dart';
 
+import '../../../app/bloc/home/profile/profile_cubit.dart';
+
 class HomePage extends NyStatefulWidget {
   HomePage({Key? key}) : super(key: key);
 
@@ -20,9 +22,11 @@ class HomePage extends NyStatefulWidget {
 }
 
 class _HomePageState extends NyState<HomePage> {
+  late ProfileCubit _profileCubit;
   @override
   init() async {
     super.init();
+    _profileCubit = context.read<ProfileCubit>()..fetchCurrentProfile();
   }
 
   @override
