@@ -7,6 +7,8 @@ import 'package:mangjek_app/resources/pages/orders/choose_location/choose_locati
 import 'package:mangjek_app/resources/pages/profile/profile_page.dart';
 import 'package:mangjek_app/routes/constant.dart';
 import 'package:nylo_framework/nylo_framework.dart';
+import 'package:mangjek_app/resources/pages/orders/choose_location/widgets/order_inquiry_widget.dart';
+import 'package:mangjek_app/app/bloc/order/order_cubit.dart';
 
 import '../resources/pages/auth/login/login_widget.dart' as login;
 import '../resources/pages/auth/onboarding/first_onboarding_widget.dart'
@@ -68,4 +70,8 @@ appRouter() => nyRoutes((router) {
         ROUTE_ORDER_DETAILS_PAGE,
         (context) => OrderDetailPage(),
       );
+
+      router.route(
+        ROUTE_ORDER_INQUIRY_PAGE, 
+        (context) => OrderInquiryWidget(orderCubit: OrderCubit(),),);
     });

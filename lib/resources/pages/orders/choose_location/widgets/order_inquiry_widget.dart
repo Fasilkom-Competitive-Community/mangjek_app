@@ -1,12 +1,18 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mangjek_app/app/bloc/globals/init.dart';
+import 'package:mangjek_app/app/bloc/home/order_inquiry/cubit/order_inquiry_cubit.dart';
 import 'package:mangjek_app/app/bloc/order/order_cubit.dart';
 import 'package:mangjek_app/app/constants/payment_methods.dart';
 import 'package:mangjek_app/app/controllers/controller.dart';
 import 'package:mangjek_app/app/extensions/string.dart';
+import 'package:mangjek_app/app/models/order_inquiry.dart';
 import 'package:mangjek_app/resources/pages/orders/qris/qr_code_page.dart';
 import 'package:nylo_framework/nylo_framework.dart';
+import 'package:mangjek_app/app/bloc/home/repository/order_inquiry_repository.dart'
+    as repository;
 
 class OrderInquiryWidget extends NyStatefulWidget {
   final Controller controller = Controller();
@@ -22,279 +28,361 @@ class OrderInquiryWidget extends NyStatefulWidget {
 }
 
 class _OrderInquiryWidgetState extends NyState<OrderInquiryWidget> {
+  late OrderInquiryCubit _orderInquiryCubit;
+  @override
+  void initState() {
+    super.initState();
+    _orderInquiryCubit = OrderInquiryCubit(
+        repository.OrderInquiryRepository as repository.OrderInquiryRepository);
+    _orderInquiryCubit.fetchOrderInquiry;
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      final cubit = context.read<OrderInquiryCubit>();
+      cubit.fetchOrderInquiry();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        // kamu mau pergi
-        // buildPesanSekarang(),
-        Container(
-          // height: 100.0,
-          width: MediaQuery.of(context).size.width,
-          padding: const EdgeInsets.symmetric(
-            vertical: 15,
-            horizontal: 15,
-          ),
-          decoration: const BoxDecoration(
-              color: Colors.white,
-              boxShadow: [BoxShadow(blurRadius: 0)],
-              borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(14.0),
-                  topLeft: Radius.circular(14.0))),
-          child: Column(
-            children: [
-              Container(
-                  child: Column(
-                children: [
-                  Row(
-                    children: [
-                      Padding(padding: EdgeInsets.only(left: 35)),
-                      // Text("Lokasi Jemput", style: TextStyle(fontWeight: FontWeight.w700),)
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Expanded(
-                        child: Card(
-                          color: '#F7FCF9'.toColor(),
-                          shape: RoundedRectangleBorder(
-                              side: BorderSide(
-                                color: '#33BC51'.toColor(),
-                              ),
-                              borderRadius: BorderRadius.circular(10.0)),
-                          child: Container(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 15),
-                            decoration: BoxDecoration(),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Row(
-                                  children: [
-                                    Column(
-                                      children: [
-                                        Image.asset(
-                                          getImageAsset("motor.png"),
-                                          width: 34,
+    return BlocProvider(
+      create: (context) => _orderInquiryCubit,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // kamu mau pergi
+          // buildPesanSekarang(),
+          Container(
+            // height: 100.0,
+            width: MediaQuery.of(context).size.width,
+            padding: const EdgeInsets.symmetric(
+              vertical: 15,
+              horizontal: 15,
+            ),
+            decoration: const BoxDecoration(
+                color: Colors.white,
+                boxShadow: [BoxShadow(blurRadius: 0)],
+                borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(14.0),
+                    topLeft: Radius.circular(14.0))),
+            child: Column(
+              children: [
+                Container(
+                    child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        Padding(padding: EdgeInsets.only(left: 35)),
+                        // Text("Lokasi Jemput", style: TextStyle(fontWeight: FontWeight.w700),)
+                      ],
+                    ),
+                    BlocBuilder<OrderInquiryCubit, OrderInquiryState>(
+                      builder: (context, state) {
+                        // final orderInquiry = state.orderInquiry;
+                        if (state is OrderInquiryInitial ||
+                            state is OrderInquiryLoading) {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        } else if (state is OrderInquiryResponse) {
+                          final inquiry = state.inquiry;
+                          return ListView.builder(
+                              itemCount: inquiry.length,
+                              itemBuilder: (context, index) {
+                                final OrderInquiry = state.inquiry[index];
+                                // List<ListTile> Array = [
+                                //   ListTile(
+                                //     title: Text(OrderInquiry.duration as String),
+                                //   ),
+                                //   ListTile(
+                                //     title: Text(OrderInquiry.distance as String),
+                                //   ),
+                                //   ListTile(
+                                //     title: Text(OrderInquiry.price as String),
+                                //   ),
+                                // ];
+
+                                // else if (state is OrderInquiryError) {
+                                //   return Center(child: Text(state.message));
+                                // }
+
+                                return Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: <Widget>[
+                                    Expanded(
+                                      child: Card(
+                                        color: '#F7FCF9'.toColor(),
+                                        shape: RoundedRectangleBorder(
+                                            side: BorderSide(
+                                              color: '#33BC51'.toColor(),
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(10.0)),
+                                        child: Container(
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 10, vertical: 15),
+                                          decoration: BoxDecoration(),
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  Column(
+                                                    children: [
+                                                      Image.asset(
+                                                        getImageAsset(
+                                                            "motor.png"),
+                                                        width: 34,
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  Column(
+                                                    // mainAxisAlignment: MainAxisAlignment.start,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Row(
+                                                        children: [
+                                                          Padding(
+                                                              padding: EdgeInsets
+                                                                  .symmetric(
+                                                                      horizontal:
+                                                                          5)),
+                                                          Text(
+                                                            "Motor",
+                                                            style: TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w600),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      Row(
+                                                        children: [
+                                                          Padding(
+                                                              padding: EdgeInsets
+                                                                  .symmetric(
+                                                                      horizontal:
+                                                                          5)),
+                                                          Text(
+                                                            "Driver jemput : ",
+                                                            style: TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w300,
+                                                                fontSize: 12),
+                                                          ),
+                                                          Text(
+                                                            OrderInquiry
+                                                                    .duration
+                                                                as String, // duration
+                                                            style: TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w600,
+                                                                fontSize: 12),
+                                                          )
+                                                        ],
+                                                      ),
+                                                      Row(
+                                                        children: [
+                                                          Padding(
+                                                              padding: EdgeInsets
+                                                                  .symmetric(
+                                                                      horizontal:
+                                                                          5)),
+                                                          Text(
+                                                            "Jarak : ",
+                                                            style: TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w300,
+                                                                fontSize: 12),
+                                                          ),
+                                                          Text(
+                                                            OrderInquiry
+                                                                    .distance
+                                                                as String, // jarak
+                                                            style: TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w600,
+                                                                fontSize: 12),
+                                                          )
+                                                        ],
+                                                      )
+                                                    ],
+                                                  ),
+                                                  Expanded(
+                                                      child:
+                                                          SizedBox.fromSize()),
+                                                  Column(
+                                                    // crossAxisAlignment: CrossAxisAlignment.end,
+                                                    children: [
+                                                      // Padding(padding: EdgeInsets.only(right: 5)),
+                                                      Text(
+                                                        state.toString()[
+                                                            2], // harga
+                                                        style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.w600,
+                                                            fontSize: 15),
+                                                      )
+                                                    ],
+                                                  )
+                                                ],
+                                              ),
+                                            ],
+                                          ),
                                         ),
-                                      ],
+                                      ),
                                     ),
-                                    Column(
-                                      // mainAxisAlignment: MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Padding(
-                                                padding: EdgeInsets.symmetric(
-                                                    horizontal: 5)),
-                                            Text(
-                                              "Motor",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.w600),
-                                            ),
-                                          ],
-                                        ),
-                                        Row(
-                                          children: [
-                                            Padding(
-                                                padding: EdgeInsets.symmetric(
-                                                    horizontal: 5)),
-                                            Text(
-                                              "Driver jemput : ",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.w300,
-                                                  fontSize: 12),
-                                            ),
-                                            Text(
-                                              "3-7 menit",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.w600,
-                                                  fontSize: 12),
-                                            )
-                                          ],
-                                        ),
-                                        Row(
-                                          children: [
-                                            Padding(
-                                                padding: EdgeInsets.symmetric(
-                                                    horizontal: 5)),
-                                            Text(
-                                              "Jarak : ",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.w300,
-                                                  fontSize: 12),
-                                            ),
-                                            Text(
-                                              "3,2 KM",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.w600,
-                                                  fontSize: 12),
-                                            )
-                                          ],
-                                        )
-                                      ],
-                                    ),
-                                    Expanded(child: SizedBox.fromSize()),
-                                    Column(
-                                      // crossAxisAlignment: CrossAxisAlignment.end,
-                                      children: [
-                                        // Padding(padding: EdgeInsets.only(right: 5)),
-                                        Text(
-                                          "Rp 10.000",
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.w600,
-                                              fontSize: 15),
-                                        )
-                                      ],
-                                    )
                                   ],
+                                );
+                              });
+                        } else if (state is OrderInquiryError) {
+                          return Center(child: Text(state.message));
+                        }
+                        return Container();
+                      },
+                    ),
+                    Padding(padding: EdgeInsets.symmetric(vertical: 5)),
+                    BlocBuilder<OrderCubit, OrderState>(
+                      builder: (context, state) {
+                        return Row(
+                          children: [
+                            Row(
+                              children: [
+                                Padding(padding: EdgeInsets.only(left: 10)),
+                                Image.asset(
+                                  state.selectedPaymentMethod.assetPath,
+                                  width: 30,
+                                  height: 30,
+                                ),
+                                const Padding(
+                                    padding: EdgeInsets.only(left: 10)),
+                                const Text(
+                                  "Metode Pembayaran",
+                                  textAlign: TextAlign.right,
                                 ),
                               ],
                             ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Padding(padding: EdgeInsets.symmetric(vertical: 5)),
-                  BlocBuilder<OrderCubit, OrderState>(
-                    builder: (context, state) {
-                      return Row(
-                        children: [
-                          Row(
-                            children: [
-                              Padding(padding: EdgeInsets.only(left: 10)),
-                              Image.asset(
-                                state.selectedPaymentMethod.assetPath,
-                                width: 30,
-                                height: 30,
-                              ),
-                              const Padding(padding: EdgeInsets.only(left: 10)),
-                              const Text(
-                                "Metode Pembayaran",
-                                textAlign: TextAlign.right,
-                              ),
-                            ],
-                          ),
-                          Expanded(child: SizedBox.fromSize()),
-                          Row(
-                            children: [
-                              Text(
-                                state.selectedPaymentMethod.value,
-                                style: TextStyle(fontWeight: FontWeight.w600),
-                              ),
-                              Padding(padding: EdgeInsets.only(left: 10)),
-                              InkWell(
-                                onTap: () async {
-                                  await showModalBottomSheet(
-                                    context: context,
-                                    shape: const RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.vertical(
-                                        top: Radius.circular(30.0),
+                            Expanded(child: SizedBox.fromSize()),
+                            Row(
+                              children: [
+                                Text(
+                                  state.selectedPaymentMethod.value,
+                                  style: TextStyle(fontWeight: FontWeight.w600),
+                                ),
+                                Padding(padding: EdgeInsets.only(left: 10)),
+                                InkWell(
+                                  onTap: () async {
+                                    await showModalBottomSheet(
+                                      context: context,
+                                      shape: const RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.vertical(
+                                          top: Radius.circular(30.0),
+                                        ),
                                       ),
+                                      clipBehavior: Clip.antiAliasWithSaveLayer,
+                                      backgroundColor: Colors.white,
+                                      isScrollControlled: true,
+                                      // maxHeight: MediaQuery.of(context).size.height * 0.8,
+                                      builder: (BuildContext context) {
+                                        return Container(
+                                          // height: MediaQuery.of(context).size.height,
+                                          child: bottomSheetPrice(),
+                                        );
+                                      },
+                                    );
+                                  },
+                                  child: Container(
+                                    child: Image.asset(
+                                      getImageAsset("more.png"),
+                                      scale: 3.0,
                                     ),
-                                    clipBehavior: Clip.antiAliasWithSaveLayer,
-                                    backgroundColor: Colors.white,
-                                    isScrollControlled: true,
-                                    // maxHeight: MediaQuery.of(context).size.height * 0.8,
-                                    builder: (BuildContext context) {
-                                      return Container(
-                                        // height: MediaQuery.of(context).size.height,
-                                        child: bottomSheetPrice(),
-                                      );
-                                    },
-                                  );
-                                },
-                                child: Container(
-                                  child: Image.asset(
-                                    getImageAsset("more.png"),
-                                    scale: 3.0,
                                   ),
                                 ),
-                              ),
-                              Padding(padding: EdgeInsets.only(left: 10)),
-                            ],
-                          )
-                        ],
-                      );
+                                Padding(padding: EdgeInsets.only(left: 10)),
+                              ],
+                            )
+                          ],
+                        );
+                      },
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(
+                            color: Color(0xFFD4D8D6),
+                          ),
+                        ),
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 5,
+                      ),
+                    ),
+                  ],
+                )),
+                const SizedBox(
+                  height: 20,
+                ),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  height: 50.0,
+                  child: ElevatedButton(
+                    style: ButtonStyle(
+                        shape: MaterialStatePropertyAll(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(14),
+                          ),
+                        ),
+                        backgroundColor:
+                            MaterialStatePropertyAll(Color(0xFFF3C703))
+                        // backgroundColor: Color(0xFFF3C703),
+                        ),
+                    child: const Text("Lanjutkan"),
+                    onPressed: () {
+                      if (orderCubit.state.selectedPaymentMethod ==
+                          PaymentMethods.QRIS) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => QRCodePage(),
+                          ),
+                        );
+                      }
                     },
                   ),
-                  Container(
-                    decoration: BoxDecoration(
-                      border: Border(
-                        bottom: BorderSide(
-                          color: Color(0xFFD4D8D6),
-                        ),
-                      ),
-                    ),
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 5,
-                    ),
-                  ),
-                ],
-              )),
-              const SizedBox(
-                height: 20,
-              ),
-              SizedBox(
-                width: MediaQuery.of(context).size.width,
-                height: 50.0,
-                child: ElevatedButton(
-                  style: ButtonStyle(
-                      shape: MaterialStatePropertyAll(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(14),
-                        ),
-                      ),
-                      backgroundColor:
-                          MaterialStatePropertyAll(Color(0xFFF3C703))
-                      // backgroundColor: Color(0xFFF3C703),
-                      ),
-                  child: const Text("Lanjutkan"),
-                  onPressed: () {
-                    if (orderCubit.state.selectedPaymentMethod ==
-                        PaymentMethods.QRIS) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => QRCodePage(),
-                        ),
-                      );
-                    }
-                  },
                 ),
-              ),
-              Padding(padding: EdgeInsets.symmetric(vertical: 5)),
-              SizedBox(
-                width: MediaQuery.of(context).size.width,
-                height: 50.0,
-                child: ElevatedButton(
-                  style: ButtonStyle(
-                      shape: MaterialStatePropertyAll(
-                        RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(14),
-                            side: BorderSide(color: Color(0xFFF3C703))),
-                      ),
-                      backgroundColor:
-                          MaterialStatePropertyAll(Color(0xFFFFFFFF))
-                      // backgroundColor: Color(0xFFF3C703),
-                      ),
-                  child: const Text(
-                    "Batalkan",
-                    style: TextStyle(color: Color(0xFF1E1E1E)),
+                Padding(padding: EdgeInsets.symmetric(vertical: 5)),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  height: 50.0,
+                  child: ElevatedButton(
+                    style: ButtonStyle(
+                        shape: MaterialStatePropertyAll(
+                          RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(14),
+                              side: BorderSide(color: Color(0xFFF3C703))),
+                        ),
+                        backgroundColor:
+                            MaterialStatePropertyAll(Color(0xFFFFFFFF))
+                        // backgroundColor: Color(0xFFF3C703),
+                        ),
+                    child: const Text(
+                      "Batalkan",
+                      style: TextStyle(color: Color(0xFF1E1E1E)),
+                    ),
+                    onPressed: (() => context),
                   ),
-                  onPressed: (() => context),
-                ),
-              )
-            ],
+                )
+              ],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 

@@ -1,7 +1,11 @@
+import 'dart:js';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mangjek_app/app/bloc/home/map/map_cubit.dart';
 import 'package:mangjek_app/app/bloc/home/map_camera/map_camera_cubit.dart';
+import 'package:mangjek_app/app/bloc/home/order_inquiry/cubit/order_inquiry_cubit.dart';
 import 'package:mangjek_app/app/bloc/home/profile/profile_cubit.dart';
+import 'package:mangjek_app/app/bloc/home/repository/order_inquiry_repository.dart';
 import 'package:mangjek_app/app/bloc/home/select_location/select_location_cubit.dart';
 import 'package:mangjek_app/app/bloc/order/order_cubit.dart';
 
@@ -10,6 +14,7 @@ MapCubit mapCubit = MapCubit();
 MapCameraCubit mapCameraCubit = MapCameraCubit();
 ProfileCubit profileCubit = ProfileCubit();
 OrderCubit orderCubit = OrderCubit();
+OrderInquiryCubit orderInquiryCubit = OrderInquiryCubit(OrderInquiryRepository());
 
 final GlobalProviders = [
   BlocProvider<SelectLocationCubit>(
@@ -26,5 +31,8 @@ final GlobalProviders = [
   ),
   BlocProvider<OrderCubit>(
     create: (context) => orderCubit,
+  ),
+  BlocProvider<OrderInquiryCubit>(
+    create: (context) => orderInquiryCubit
   ),
 ];
