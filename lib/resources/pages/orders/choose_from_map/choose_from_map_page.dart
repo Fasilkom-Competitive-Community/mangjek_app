@@ -2,22 +2,23 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:geocoder2/geocoder2.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
-import 'package:mangjek_app/app/extensions/constructor.dart' as cons;
 import 'package:mangjek_app/app/bloc/home/map/map_cubit.dart';
 import 'package:mangjek_app/app/bloc/home/map_camera/map_camera_cubit.dart';
 import 'package:mangjek_app/app/bloc/home/select_location/select_location_cubit.dart';
+import 'package:mangjek_app/app/config/config.dart';
 import 'package:mangjek_app/app/controllers/controller.dart';
+import 'package:mangjek_app/app/extensions/constructor.dart' as cons;
+import 'package:mangjek_app/app/singleton/location_plugin.dart';
 import 'package:mangjek_app/app/singleton/media_query.dart';
 import 'package:mangjek_app/app/utils/debouncer.dart';
-import 'package:mangjek_app/app/singleton/location_plugin.dart';
 import 'package:mangjek_app/routes/constant.dart';
 import 'package:nylo_framework/nylo_framework.dart';
-import 'package:sizer/sizer.dart';
-import 'package:geocoder2/geocoder2.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sizer/sizer.dart';
 
 class ChooseFromMapPage extends NyStatefulWidget {
   final Controller controller = Controller();
@@ -61,9 +62,10 @@ class _ChooseFromMapPageState extends NyState<ChooseFromMapPage> {
   Future<void> getAddressFromCenterMarker() async {
     try {
       GeoData data = await Geocoder2.getDataFromCoordinates(
-          latitude: centerMarkerLocation.latitude,
-          longitude: centerMarkerLocation.longitude,
-          googleMapApiKey: "AIzaSyDIcTGa61FUTuSvoN1W5oRaLlF3K-Bfbmo");
+        latitude: centerMarkerLocation.latitude,
+        longitude: centerMarkerLocation.longitude,
+        googleMapApiKey: Config.GMAPS_API_KEY,
+      );
       setState(() {
         userLocation = data.address;
       });

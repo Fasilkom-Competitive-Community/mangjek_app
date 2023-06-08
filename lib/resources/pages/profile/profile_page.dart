@@ -1,22 +1,25 @@
-import 'dart:developer';
+import 'dart:async';
 import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mangjek_app/app/bloc/home/profile/profile_cubit.dart';
-import 'package:mangjek_app/app/controllers/controller.dart';
+import 'package:mangjek_app/app/controllers/profile_controller.dart';
 import 'package:mangjek_app/app/extensions/string.dart';
-import 'package:mangjek_app/app/networking/profile_service.dart';
 import 'package:mangjek_app/app/models/user.dart' as user_model;
-import 'package:mangjek_app/bootstrap/helpers.dart';
+import 'package:mangjek_app/app/singleton/media_query.dart';
+import 'package:mangjek_app/app/utils/debouncer.dart';
+import 'package:mangjek_app/routes/constant.dart';
 import 'package:nylo_framework/nylo_framework.dart';
 
 class ProfileUserPage extends NyStatefulWidget {
   ProfileUserPage({super.key});
 
-  final Controller controller = Controller();
+  final ProfileController controller = ProfileController();
 
   @override
   State<ProfileUserPage> createState() => _ProfileUserState();
@@ -28,12 +31,16 @@ class _ProfileUserState extends NyState<ProfileUserPage> {
   final User? user = FirebaseAuth.instance.currentUser;
 
   user_model.User? currentLoggedInUser;
-  late ProfileCubit _profileCubit;
+  bool fromOnboarding = false;
 
   @override
   init() async {
     super.init();
-    _profileCubit = context.read<ProfileCubit>()..fetchCurrentProfile();
+
+    Map? data = widget.data() as Map?;
+    if (data != null && data["from_onboarding"]) {
+      fromOnboarding = true;
+    }
   }
 
   @override
@@ -158,8 +165,10 @@ class _ProfileUserState extends NyState<ProfileUserPage> {
     );
   }
 
-  Widget __createFormEdit(String label, String value, String labelIcon,
+  Widget __createFormEdit(
+      String label, String value, String labelIcon, String keyData,
       {onlyNumber = false}) {
+    Debouncer debouncer = Debouncer(milliseconds: 200);
     return Container(
         margin: EdgeInsets.only(top: 11),
         child: Column(
@@ -178,7 +187,15 @@ class _ProfileUserState extends NyState<ProfileUserPage> {
                 style: TextStyle(
                   fontSize: 14,
                 ),
-                enabled: false,
+                onChanged: (value) {
+                  debouncer.run(() {
+                    widget.controller.setRegisterData(keyData, value);
+                  });
+                },
+                enabled: keyData == ProfileController.registerPhoneNumberKey &&
+                        !fromOnboarding
+                    ? false
+                    : true,
                 decoration: InputDecoration(
                   enabled: false,
                   border: OutlineInputBorder(
@@ -188,10 +205,15 @@ class _ProfileUserState extends NyState<ProfileUserPage> {
                   filled: true,
                   prefixIcon: Padding(
                     padding: EdgeInsets.only(left: 5),
-                    child: Image.asset(
-                      getImageAsset(labelIcon),
-                      color: 'F3C703'.toColor(),
-                    ),
+                    child: labelIcon.contains(RegExp(".svg"))
+                        ? SvgPicture.asset(
+                            labelIcon,
+                            color: 'F3C703'.toColor(),
+                          )
+                        : Image.asset(
+                            getImageAsset(labelIcon),
+                            color: 'F3C703'.toColor(),
+                          ),
                   ),
                 ),
               ),
@@ -206,41 +228,66 @@ class _ProfileUserState extends NyState<ProfileUserPage> {
       padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
       child: BlocBuilder<ProfileCubit, ProfileState>(
         builder: (context, state) {
-          log("test here state : ${state}");
-          if (state is ProfileLoaded) {
-            return Column(children: [
-              __createFormEdit(
-                'Nama Lengkap',
-                state.user.name,
-                'profile-circle.png',
+          if (state is ProfileLoaded || state is ProfileNotFound) {
+            return Container(
+              padding: const EdgeInsets.only(
+                bottom: 30,
               ),
-              __createFormEdit(
-                'NIM',
-                state.user.nim,
-                'nim-icon.png',
-                onlyNumber: true,
-              ),
-              __createFormEdit(
+              child: Column(children: [
+                __createFormEdit(
+                  'Nama Lengkap',
+                  state.user.name,
+                  'profile-circle.png',
+                  ProfileController.registerNameKey,
+                ),
+                __createFormEdit(
+                  'NIM',
+                  state.user.nim,
+                  'nim-icon.png',
+                  ProfileController.registerNimKey,
+                  onlyNumber: true,
+                ),
+                __createFormEdit(
+                  'Nomor Handphone',
+                  state.user.phoneNumber,
+                  'sms-search.png',
+                  ProfileController.registerPhoneNumberKey,
+                  onlyNumber: true,
+                ),
+                __createFormEdit(
                   'Fakultas',
                   // state.user.fakultas,
                   'Fasilkom',
-                  'jurusan-icon.png'),
-              __createFormEdit(
+                  'jurusan-icon.png',
+                  ProfileController.registerFakultasKey,
+                ),
+                __createFormEdit(
                   'Jurusan',
                   // state.user.jurusan,
                   'Teknik Informatika',
-                  'jurusan-icon.png'),
-              __createFormEdit(
+                  'jurusan-icon.png',
+                  ProfileController.registerJurusanKey,
+                ),
+                __createFormEdit(
                   'Angkatan',
                   // state.user.angkatan,
                   '2020',
-                  'angkatan-icon.png'),
-              __createFormEdit(
+                  'angkatan-icon.png',
+                  ProfileController.registerAngkatanKey,
+                ),
+                __createFormEdit(
                   'Alamat Tempat Tinggal',
                   // state.user.alamat,
                   'Indralaya',
-                  'alamat-icon.png'),
-            ]);
+                  'alamat-icon.png',
+                  ProfileController.registerAlamatKey,
+                ),
+                SizedBox(
+                  height: 40,
+                ),
+                __createButtonSubmit(context),
+              ]),
+            );
           }
 
           return Container(
@@ -253,32 +300,59 @@ class _ProfileUserState extends NyState<ProfileUserPage> {
     );
   }
 
+  Future<dynamic> submitForm() async {
+    EasyLoading.show(status: 'loading...');
+    var resp = await widget.controller.registerProfile();
+    Timer(Duration(seconds: 2), () {
+      EasyLoading.dismiss();
+      if (resp != null) {
+        routeTo(ROUTE_HOME_PAGE);
+      }
+    });
+  }
+
+  Widget __createButtonSubmit(BuildContext context) {
+    return Container(
+      width: MediaQuerySingleton.screenSize.width * 0.5,
+      height: 40,
+      child: ElevatedButton(
+        onPressed: () {
+          if (widget.controller.validateRegisterForm(context)) {
+            submitForm();
+          }
+        },
+        child: Text("Submit"),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.white,
-        appBar: AppBar(
-          title: Text(
-            'Profilku',
-            style: TextStyle(color: Colors.black, fontSize: 18.0),
-          ),
-          titleSpacing: -10,
-          backgroundColor: Colors.white,
-          elevation: 0,
-          leading: const BackButton(color: Colors.black),
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        title: Text(
+          'Profilku',
+          style: TextStyle(color: Colors.black, fontSize: 18.0),
         ),
-        body: SafeArea(
-          child: ListView(
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  changePhoto(),
-                  formEdit(),
-                ],
-              ),
-            ],
-          ),
-        ));
+        titleSpacing: -10,
+        backgroundColor: Colors.white,
+        elevation: 0,
+        leading: const BackButton(color: Colors.black),
+      ),
+      body: SafeArea(
+        child: ListView(
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                changePhoto(),
+                formEdit(),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

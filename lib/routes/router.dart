@@ -1,19 +1,15 @@
-import 'package:flutter/material.dart';
-import 'package:mangjek_app/app/singleton/media_query.dart';
+import 'package:mangjek_app/app/bloc/order/order_cubit.dart';
+import 'package:mangjek_app/resources/pages/auth/login/login_widget.dart';
+import 'package:mangjek_app/resources/pages/auth/onboarding/first_onboarding_widget.dart';
 import 'package:mangjek_app/resources/pages/home/home_page.dart';
+import 'package:mangjek_app/resources/pages/initial/initial.dart';
 import 'package:mangjek_app/resources/pages/order_details/order_details_page.dart';
 import 'package:mangjek_app/resources/pages/orders/choose_from_map/choose_from_map_page.dart';
 import 'package:mangjek_app/resources/pages/orders/choose_location/choose_location.dart';
+import 'package:mangjek_app/resources/pages/orders/choose_location/widgets/order_inquiry_widget.dart';
 import 'package:mangjek_app/resources/pages/profile/profile_page.dart';
 import 'package:mangjek_app/routes/constant.dart';
 import 'package:nylo_framework/nylo_framework.dart';
-import 'package:mangjek_app/resources/pages/orders/choose_location/widgets/order_inquiry_widget.dart';
-import 'package:mangjek_app/app/bloc/order/order_cubit.dart';
-
-import '../resources/pages/auth/login/login_widget.dart' as login;
-import '../resources/pages/auth/onboarding/first_onboarding_widget.dart'
-    as first_onboarding_widget;
-import '../resources/pages/auth/onboarding/splash_screen_widget.dart' as logo;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,20 +25,18 @@ import '../resources/pages/auth/onboarding/splash_screen_widget.dart' as logo;
 appRouter() => nyRoutes((router) {
       router.route(
         ROUTE_INITIAL_PAGE,
-        (context) {
-          MediaQuerySingleton.init(MediaQuery.of(context).size);
-          return StreamBuilder(
-            builder: (context, snapshot) {
-              if (snapshot.data == null) {
-                return const first_onboarding_widget.OnBoarding();
-              } else {
-                return logo.Logo(data: snapshot.data);
-              }
-            },
-            stream: login.firebaseUserStream,
-          );
-        },
+        (context) => InitialPage(),
         transition: PageTransitionType.fade,
+      );
+
+      router.route(
+        ROUTE_ONBOARDING_PAGE,
+        (context) => OnBoarding(),
+      );
+
+      router.route(
+        ROUTE_LOGIN_PAGE,
+        (context) => Login(),
       );
 
       router.route(
@@ -72,6 +66,9 @@ appRouter() => nyRoutes((router) {
       );
 
       router.route(
-        ROUTE_ORDER_INQUIRY_PAGE, 
-        (context) => OrderInquiryWidget(orderCubit: OrderCubit(),),);
+        ROUTE_ORDER_INQUIRY_PAGE,
+        (context) => OrderInquiryWidget(
+          orderCubit: OrderCubit(),
+        ),
+      );
     });

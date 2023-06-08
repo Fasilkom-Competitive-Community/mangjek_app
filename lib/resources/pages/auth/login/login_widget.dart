@@ -1,14 +1,17 @@
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:mangjek_app/app/firebase/firebase.dart';
+import 'package:mangjek_app/config/storage_keys.dart';
+import 'package:mangjek_app/routes/constant.dart';
+import 'package:nylo_framework/nylo_framework.dart';
 
 import '../../../../app/extensions/constructor.dart' as cons;
 import '../onboarding/splash_screen_widget.dart' as logo;
 import '../register/register_widget.dart' as register;
 import 'reset_sandi.dart' as reset;
-
-FirebaseAuth _auth = FirebaseAuth.instance;
-Stream<User?> get firebaseUserStream => _auth.authStateChanges();
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -37,16 +40,17 @@ class _LoginState extends State<Login> {
   Future<void> _login(String email, String pass) async {
     try {
       UserCredential userCredential =
-          await _auth.signInWithEmailAndPassword(email: email, password: pass);
+          await AuthInstance.signInWithEmailAndPassword(
+              email: email, password: pass);
+      NyStorage.store(
+          StorageKey.userToken, await userCredential.user?.getIdToken());
       if (userCredential.user!.emailVerified) {
         if (!mounted) return;
-        Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(
-              builder: (context) => logo.Logo(data: userCredential.user),
-            ),
-            (route) => false);
+
+        routeTo(ROUTE_HOME_PAGE,
+            navigationType: NavigationType.pushAndForgetAll);
       } else {
-        await _auth.signOut();
+        await AuthInstance.signOut();
         popUpVerifikasi(
             "Heyyy 🥲",
             "Email yang kamu daftarkan belum terverifikasi",
@@ -376,9 +380,10 @@ class _LoginState extends State<Login> {
   void _verifikasiEmail(String email, String pass) async {
     try {
       UserCredential userCredential =
-          await _auth.signInWithEmailAndPassword(email: email, password: pass);
+          await AuthInstance.signInWithEmailAndPassword(
+              email: email, password: pass);
       await userCredential.user!.sendEmailVerification();
-      await _auth.signOut();
+      await AuthInstance.signOut();
       if (!mounted) return;
       Navigator.pop(context);
       popUp(

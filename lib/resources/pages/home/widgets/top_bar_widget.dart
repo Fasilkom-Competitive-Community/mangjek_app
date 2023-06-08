@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mangjek_app/app/bloc/home/profile/profile_cubit.dart';
 import 'package:mangjek_app/app/constants/choose_location.dart';
 import 'package:mangjek_app/routes/constant.dart';
 import 'package:nylo_framework/nylo_framework.dart';
-import 'package:mangjek_app/resources/widgets/input_location_widget.dart';
-import 'package:mangjek_app/app/networking/profile_service.dart';
-import 'package:mangjek_app/app/bloc/home/profile/profile_cubit.dart';
 
 class TopBarHomeWidget extends StatefulWidget {
   const TopBarHomeWidget({super.key});
@@ -16,8 +13,6 @@ class TopBarHomeWidget extends StatefulWidget {
 }
 
 class _TopBarHomeWidgetState extends State<TopBarHomeWidget> {
-  late ProfileCubit _profileCubit;
-
   Widget buildTopBar() {
     return Stack(
       children: [

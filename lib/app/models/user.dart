@@ -7,6 +7,16 @@ class User {
   late DateTime createdAt;
   late DateTime updatedAt;
 
+  User() {
+    id = "";
+    name = "";
+    email = "";
+    phoneNumber = "";
+    nim = "";
+    createdAt = DateTime.utc(2000);
+    updatedAt = DateTime.utc(2000);
+  }
+
   User.fromJson(dynamic data) {
     id = data['id'];
     name = data['name'];
@@ -37,5 +47,17 @@ class UserResponse {
 
   toJson() => {
         "data": user.toJson(),
+      };
+}
+
+class RegisterResponse {
+  late String userid;
+
+  RegisterResponse.fromJson(dynamic data) {
+    userid = data['data'];
+  }
+
+  toJson() => {
+        "data": userid,
       };
 }

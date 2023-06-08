@@ -17,12 +17,10 @@ class ProfileTab extends StatefulWidget {
 class _ProfileTabState extends NyState<ProfileTab> {
   final User? user = FirebaseAuth.instance.currentUser;
   user_model.User? currentLoggedInUser;
-  late ProfileCubit _profileCubit;
 
   @override
   init() async {
     super.init();
-    _profileCubit = context.read<ProfileCubit>()..fetchCurrentProfile();
   }
 
   @override
@@ -48,7 +46,6 @@ class _ProfileTabState extends NyState<ProfileTab> {
                     margin: EdgeInsets.fromLTRB(10, 4, 2, 0),
                     child: BlocBuilder<ProfileCubit, ProfileState>(
                         builder: (context, state) {
-                      log("test here state : ${state}");
                       if (state is ProfileLoaded) {
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,

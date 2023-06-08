@@ -17,18 +17,37 @@ import 'package:nylo_framework/nylo_framework.dart';
 class ProfileService extends BaseApiService {
   ProfileService({BuildContext? buildContext}) : super(buildContext);
 
-  @override
-  String get baseUrl => getEnv('API_BASE_URL');
-
-  @override
-  final interceptors = {
-    if (getEnv('APP_DEBUG') == true) PrettyDioLogger: PrettyDioLogger()
-  };
-
-  Future<UserResponse?> fetchProfile(String uid, String token) async {
+  Future<UserResponse?> fetchProfile(
+    String uid,
+    String token, {
+    void Function(DioError)? handleFailure,
+  }) async {
     return await network<UserResponse>(
       request: (request) => request.get("/users/${uid}"),
       bearerToken: token,
+      handleFailure: handleFailure,
+    );
+  }
+
+  Future<RegisterResponse?> registerProfile(
+    String uid,
+    String name,
+    String email,
+    String phoneNumber,
+    String token,
+    String fcmToken, {
+    void Function(DioError)? handleFailure,
+  }) async {
+    return await network<RegisterResponse>(
+      request: (request) => request.post("/users", data: {
+        "id": uid,
+        "name": name,
+        "email": email,
+        "phone_number": phoneNumber,
+        "token": fcmToken,
+      }),
+      bearerToken: token,
+      handleFailure: handleFailure,
     );
   }
 }

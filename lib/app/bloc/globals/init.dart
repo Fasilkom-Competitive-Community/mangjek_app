@@ -1,5 +1,3 @@
-import 'dart:js';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mangjek_app/app/bloc/home/map/map_cubit.dart';
 import 'package:mangjek_app/app/bloc/home/map_camera/map_camera_cubit.dart';

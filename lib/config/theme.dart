@@ -81,10 +81,10 @@ class ThemeConfig {
 
   // To then use this theme, add it to the [appThemes] above like the following:
   // final appThemes = [
-  ///   ThemeConfig.bright(), // new theme
-  //
-  //   ThemeConfig.light(),
-  //
-  //   ThemeConfig.dark(),
+  // ThemeConfig.bright(), // new theme
+
+  // ThemeConfig.light(),
+
+  // ThemeConfig.dark(),
   // ];
 }

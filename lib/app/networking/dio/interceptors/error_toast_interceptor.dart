@@ -1,12 +1,11 @@
+import 'dart:developer';
+
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:nylo_framework/nylo_framework.dart';
 
-class BearerAuthInterceptor extends Interceptor {
+class ErrorToastInterceptor extends Interceptor {
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
-    String? userToken = Backpack.instance.read('user_token');
-    if (userToken != null) {
-      options.headers.addAll({"Authorization": "Bearer $userToken"});
-    }
     return super.onRequest(options, handler);
   }
 
@@ -17,6 +16,10 @@ class BearerAuthInterceptor extends Interceptor {
 
   @override
   void onError(DioError err, ErrorInterceptorHandler handler) {
+    if ((err.response?.statusCode ?? 0) >= 400) {
+      EasyLoading.showError(err.response!.data.toString(),
+          duration: Duration(seconds: 2));
+    }
     handler.next(err);
   }
 }

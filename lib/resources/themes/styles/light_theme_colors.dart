@@ -22,7 +22,7 @@ class LightThemeColors implements ColorStyles {
   Color get appBarPrimaryContent => Colors.white;
 
   // buttons
-  Color get buttonBackground => Colors.blueAccent;
+  Color get buttonBackground => Color(0xFFF3C703);
   Color get buttonPrimaryContent => Colors.white;
 
   // bottom tab bar

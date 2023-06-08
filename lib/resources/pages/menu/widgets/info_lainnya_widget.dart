@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mangjek_app/app/extensions/string.dart';
+import 'package:mangjek_app/app/firebase/firebase.dart';
+import 'package:mangjek_app/resources/pages/auth/login/login_widget.dart';
 import 'package:mangjek_app/resources/pages/menu/constant.dart';
 import 'package:nylo_framework/nylo_framework.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -42,13 +44,12 @@ class _InfoLainnyaState extends State<InfoLainnya> {
               __listInfo('task-square.png', 'Daftar menjadi driver'),
               __listInfo('book-square.png', 'Tentang aplikasi'),
               __listInfo('logout.png', 'Log out', onTap: () async {
-                await FirebaseAuth.instance.signOut();
+                await AuthInstance.signOut();
                 if (!mounted) return;
                 Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(
-                      builder: (context) =>
-                          const first_onboarding_widget.OnBoarding(),
+                      builder: (context) => const Login(),
                     ),
                     (route) => false);
               }),

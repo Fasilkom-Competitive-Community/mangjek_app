@@ -1,43 +1,25 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:mangjek_app/app/networking/profile_service.dart';
-import 'package:mangjek_app/routes/constant.dart';
-import 'package:mangjek_app/bootstrap/helpers.dart';
-
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mangjek_app/app/bloc/home/profile/profile_cubit.dart';
 import 'package:mangjek_app/app/extensions/constructor.dart' as cons;
+import 'package:mangjek_app/app/firebase/firebase.dart';
+import 'package:mangjek_app/routes/constant.dart';
+import 'package:nylo_framework/nylo_framework.dart';
 
-class Logo extends StatefulWidget {
-  const Logo({super.key, required this.data});
-  final User? data;
+class Logo extends NyStatefulWidget {
+  final User? user;
+  Logo({super.key, this.user});
 
   @override
   State<Logo> createState() => _LogoState();
 }
 
-class _LogoState extends State<Logo> with TickerProviderStateMixin {
-  bool router = true;
-  String validasi = '';
-
-  splashScreen() async {
-    var duration = const Duration(seconds: 4);
-    return Timer(duration, () {
-      if (mounted) {
-        if (router == true) {
-          Navigator.pushReplacementNamed(
-            context,
-            ROUTE_HOME_PAGE,
-          );
-        } else {
-          Navigator.pushReplacementNamed(
-            context,
-            ROUTE_PROFILE_PAGE,
-          );
-        }
-      }
-    });
-  }
+class _LogoState extends NyState<Logo> with TickerProviderStateMixin {
+  bool navigateToProfileFirst = false;
 
   late final AnimationController _controller = AnimationController(
     vsync: this,
@@ -55,32 +37,48 @@ class _LogoState extends State<Logo> with TickerProviderStateMixin {
 
   @override
   void initState() {
-    _getReq();
-    splashScreen();
     super.initState();
   }
 
-  Future _getReq() async {
-    try {
-      FirebaseAuth _auth = FirebaseAuth.instance;
-      String uid = _auth.currentUser!.uid.toString();
-      String token = await _auth.currentUser!.getIdToken();
-      final response =
-          await api<ProfileService>((req) => req.fetchProfile(uid, token));
-      setState(() {
-        validasi = response.statusCode.toString();
-      });
-      _startPage(validasi);
-    } catch (e) {}
+  late ProfileCubit _profileCubit;
+
+  @override
+  init() {
+    super.init();
+    _profileCubit = context.read<ProfileCubit>()
+      ..fetchCurrentProfileIfNotLoaded();
   }
 
-  void _startPage(String validasi) {
-    if (validasi == "404") {
-      setState(() {
-        router = false;
+  void conditionalNavigates(ProfileState state) {
+    if (state is ProfileNotFound) {
+      // redirect after x seconds
+      Timer(Duration(seconds: 3), () {
+        routeTo(ROUTE_PROFILE_PAGE, data: {
+          "from_onboarding": true,
+        });
       });
+      return;
     }
-    print('validasi berhasil');
+
+    if (state is ProfileFirebaseNotLoggedIn) {
+      Timer(Duration(seconds: 3), () {
+        routeTo(ROUTE_LOGIN_PAGE, data: {
+          "from_onboarding": true,
+        });
+      });
+      return;
+    }
+
+    if (state is ProfileLoadError) {
+      log("Profile load error", error: state.error);
+      routeTo(ROUTE_ONBOARDING_PAGE);
+      return;
+    }
+
+    if (state is ProfileLoaded) {
+      routeTo(ROUTE_HOME_PAGE);
+      return;
+    }
   }
 
   @override
@@ -88,13 +86,29 @@ class _LogoState extends State<Logo> with TickerProviderStateMixin {
     return Scaffold(
       body: SafeArea(
         child: Center(
-          child: FadeTransition(
-            opacity: _animation,
-            child: Image.asset(
-              cons.assetsImgLogoSikuning,
-              width: 150,
-            ),
-          ),
+          child: StreamBuilder<User?>(
+              stream: firebaseUserStream,
+              builder: (context, snapshot) {
+                if ((snapshot.connectionState == ConnectionState.done ||
+                        snapshot.connectionState == ConnectionState.active) &&
+                    (!snapshot.hasData || snapshot.data == null)) {
+                  _profileCubit.firebaseIsNotLoggedIn();
+                }
+
+                return BlocListener<ProfileCubit, ProfileState>(
+                  listener: (context, state) {
+                    conditionalNavigates(state);
+                  },
+                  listenWhen: (prev, curr) => prev is ProfileInitial,
+                  child: FadeTransition(
+                    opacity: _animation,
+                    child: Image.asset(
+                      cons.assetsImgLogoSikuning,
+                      width: 150,
+                    ),
+                  ),
+                );
+              }),
         ),
       ),
     );
