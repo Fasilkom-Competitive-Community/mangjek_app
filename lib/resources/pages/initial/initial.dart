@@ -14,8 +14,6 @@ class InitialPage extends NyStatefulWidget {
 }
 
 class _InitialPageState extends NyState {
-  bool showModalPermission = false;
-
   @override
   boot() async {
     super.boot();

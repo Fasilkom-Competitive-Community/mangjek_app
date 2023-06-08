@@ -1,8 +1,11 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:mangjek_app/app/bloc/home/profile/profile_cubit.dart';
 import 'package:mangjek_app/app/firebase/firebase.dart';
 import 'package:mangjek_app/config/storage_keys.dart';
 import 'package:mangjek_app/routes/constant.dart';
@@ -42,12 +45,11 @@ class _LoginState extends State<Login> {
       UserCredential userCredential =
           await AuthInstance.signInWithEmailAndPassword(
               email: email, password: pass);
-      NyStorage.store(
-          StorageKey.userToken, await userCredential.user?.getIdToken());
       if (userCredential.user!.emailVerified) {
         if (!mounted) return;
 
-        routeTo(ROUTE_HOME_PAGE,
+        _profileCubit..resetProfileStateToInitialState()..fetchCurrentProfileIfNotLoaded();
+        routeTo(ROUTE_SPLASH_PAGE,
             navigationType: NavigationType.pushAndForgetAll);
       } else {
         await AuthInstance.signOut();
@@ -111,8 +113,12 @@ class _LoginState extends State<Login> {
     }
   }
 
+  late ProfileCubit _profileCubit;
+
   @override
   Widget build(BuildContext context) {
+    _profileCubit = context.read<ProfileCubit>();
+
     final double screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       body: SingleChildScrollView(

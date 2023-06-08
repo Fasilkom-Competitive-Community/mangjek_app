@@ -48,19 +48,19 @@ class ProfileController extends Controller {
 
     var matchPhone = regexPhoneNumber
         .firstMatch(_registerData[registerPhoneNumberKey] ?? "");
-    if (matchPhone == null || matchPhone[0] == null) {
+    if (matchPhone == null || matchPhone.groupCount <= 0 || matchPhone.group(1) == null) {
       popUpValidationError(context, "Heyy",
           "Sepertinya nomor handphone yang kamu masukkan tidak valid", 14, 110);
       return false;
     }
 
-    var phoneNumFinal = "+62" + matchPhone[0]!;
+    var phoneNumFinal = "+62" + matchPhone.group(1)!;
     // var phoneNumFinal = matchPhone[0]!;
     setRegisterData(registerPhoneNumberKey, phoneNumFinal);
     return true;
   }
 
-  Future<UserResponse?> registerProfile() async {
+  Future<RegisterResponse?> registerProfile() async {
     String uid = AuthInstance.currentUser?.uid ?? "";
     String token = await AuthInstance.currentUser?.getIdToken() ?? "";
     String email = AuthInstance.currentUser?.email ?? "";

@@ -10,6 +10,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:mangjek_app/app/bloc/home/profile/profile_cubit.dart';
 import 'package:mangjek_app/app/controllers/profile_controller.dart';
 import 'package:mangjek_app/app/extensions/string.dart';
+import 'package:mangjek_app/app/firebase/firebase.dart';
 import 'package:mangjek_app/app/models/user.dart' as user_model;
 import 'package:mangjek_app/app/singleton/media_query.dart';
 import 'package:mangjek_app/app/utils/debouncer.dart';
@@ -29,6 +30,8 @@ class _ProfileUserState extends NyState<ProfileUserPage> {
   File? image;
   final ImagePicker _picker = ImagePicker();
   final User? user = FirebaseAuth.instance.currentUser;
+
+  late ProfileCubit _profileCubit = context.read<ProfileCubit>();
 
   user_model.User? currentLoggedInUser;
   bool fromOnboarding = false;
@@ -286,6 +289,28 @@ class _ProfileUserState extends NyState<ProfileUserPage> {
                   height: 40,
                 ),
                 __createButtonSubmit(context),
+                if (fromOnboarding)
+                  Container(
+                    padding: const EdgeInsets.only(
+                      top: 20,
+                    ),
+                    child: ElevatedButton(
+                      onPressed: () async {
+                        context
+                            .read<ProfileCubit>()
+                            .resetProfileStateToInitialState();
+                        await AuthInstance.signOut();
+                        routeTo(ROUTE_INITIAL_PAGE,
+                            navigationType: NavigationType.pushAndForgetAll);
+                      },
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateColor.resolveWith(
+                          (states) => Colors.red.shade400,
+                        ),
+                      ),
+                      child: Text("Logout"),
+                    ),
+                  )
               ]),
             );
           }
@@ -306,6 +331,7 @@ class _ProfileUserState extends NyState<ProfileUserPage> {
     Timer(Duration(seconds: 2), () {
       EasyLoading.dismiss();
       if (resp != null) {
+        _profileCubit.resetProfileStateToInitialState();
         routeTo(ROUTE_HOME_PAGE);
       }
     });

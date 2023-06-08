@@ -71,12 +71,16 @@ class _LogoState extends NyState<Logo> with TickerProviderStateMixin {
 
     if (state is ProfileLoadError) {
       log("Profile load error", error: state.error);
-      routeTo(ROUTE_ONBOARDING_PAGE);
+      Timer(Duration(seconds: 3), () {
+        routeTo(ROUTE_ONBOARDING_PAGE);
+      });
       return;
     }
 
     if (state is ProfileLoaded) {
-      routeTo(ROUTE_HOME_PAGE);
+      Timer(Duration(seconds: 3), () {
+        routeTo(ROUTE_HOME_PAGE);
+      });
       return;
     }
   }

@@ -1,5 +1,6 @@
 const ROUTE_INITIAL_PAGE = "/";
 const ROUTE_HOME_PAGE = "/home";
+const ROUTE_SPLASH_PAGE = "/splashscreen";
 const ROUTE_ONBOARDING_PAGE = "/onboarding";
 const ROUTE_LOGIN_PAGE = "/login";
 const ROUTE_MENU_PAGE = "/menu";

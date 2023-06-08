@@ -21,7 +21,8 @@ class BaseApiService extends NyBaseApiService {
 
   @override
   final interceptors = {
-    if (getEnv('APP_DEBUG') == true) PrettyDioLogger: PrettyDioLogger(),
+    if (getEnv('APP_DEBUG') == true)
+      PrettyDioLogger: PrettyDioLogger(requestBody: true, requestHeader: true),
     ErrorToastInterceptor: ErrorToastInterceptor(),
   };
 }

@@ -23,8 +23,12 @@ class ProfileService extends BaseApiService {
     void Function(DioError)? handleFailure,
   }) async {
     return await network<UserResponse>(
-      request: (request) => request.get("/users/${uid}"),
-      bearerToken: token,
+      request: (request) => request.get("/users/${uid}",
+          options: Options(
+            headers: {
+              "Authorization": "Bearer ${token}",
+            },
+          )),
       handleFailure: handleFailure,
     );
   }

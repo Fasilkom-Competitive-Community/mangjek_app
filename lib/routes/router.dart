@@ -1,6 +1,7 @@
 import 'package:mangjek_app/app/bloc/order/order_cubit.dart';
 import 'package:mangjek_app/resources/pages/auth/login/login_widget.dart';
 import 'package:mangjek_app/resources/pages/auth/onboarding/first_onboarding_widget.dart';
+import 'package:mangjek_app/resources/pages/auth/onboarding/splash_screen_widget.dart';
 import 'package:mangjek_app/resources/pages/home/home_page.dart';
 import 'package:mangjek_app/resources/pages/initial/initial.dart';
 import 'package:mangjek_app/resources/pages/order_details/order_details_page.dart';
@@ -27,6 +28,11 @@ appRouter() => nyRoutes((router) {
         ROUTE_INITIAL_PAGE,
         (context) => InitialPage(),
         transition: PageTransitionType.fade,
+      );
+
+      router.route(
+        ROUTE_SPLASH_PAGE,
+        (context) => Logo(),
       );
 
       router.route(
